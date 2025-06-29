@@ -1,9 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset = "UTF-8">
-        <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
-        <title>Aerostream Radar</title>
+<head>
+    <meta charset = "UTF-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title>Aerostream Radar</title>
 
-    </head>
+    <!-- Map import -->
+    <link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+
+        }
+
+        #map {
+            width: 100vw;
+            height: 100vh;
+
+        }
+
+        .leaflet-tile-pane {
+            filter: grayscale(100%) contrast(1.2);
+
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- Map container -->
+    <div id = "map"></div>
+
+    <!-- Leaflet JavaScript -->
+    <script src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Initialize map
+        var map = L.map('map', {
+            center: [49.1934, -123.1751],
+            zoom: 10,
+            attributionControl: false,
+            zoomControl: false
+
+        });
+
+        // OpenStreetMap layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+
+        })
+        .addTo(map);
+
+    </script>
+</body>
 </html>
