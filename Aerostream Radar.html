@@ -3,6 +3,7 @@
 <head>
     <meta charset = "UTF-8">
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+    
     <title>Aerostream Radar</title>
 
     <!-- Map import -->
@@ -12,6 +13,7 @@
         body {
             margin: 0;
             padding: 0;
+            font-family: 'Courier New';
 
         }
 
@@ -44,6 +46,68 @@
 
         }
 
+        /* Manual coordinate entry */
+        #coordinate-prompt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rbga(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 5px;
+            border: 1px solid #6ea3ee;
+            z-index: 2000;
+            display: none;
+
+        }
+
+        #coordinate-prompt h3 {
+            margin-top: 0;
+            color: #6ea3ee;
+
+        }
+
+        #coordinate-prompt input {
+            background: #000000;
+            color: #6ea3ee;
+            border: 1px solid #6ea3ee;
+            padding: 8px;
+            margin: 5px;
+            font-family: 'Courier New';
+            width: 150px;
+
+        }
+
+        #coordinate-prompt button {
+            background: #1c293c;
+            color: #6ea3ee;
+            border: 1px solid #6ea3ee;
+            padding: 10px 20px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-family: 'Courier New';
+            display: block;
+            width: 100%;
+
+        }
+
+        #coordinate-prompt button:hover {
+            background: #6ea3ee;
+            color: #1c293c;
+
+        }
+
+        .location-button {
+            background: #000000 !important;
+            margin-bottom: 5px !important;
+
+        }
+
+        .location-button:hover {
+            background: #6ea3ee !important;
+
+        }
+
     </style>
 </head>
 
@@ -51,12 +115,39 @@
     <!-- Map container -->
     <div id = "map"></div>
 
-    <!-- Loading screen -->
+    <!-- Automatic coordinate dialog -->
     <div id = "loading">
         <div style = "font-family: 'Courier New';">Getting your location...</div>
+
         <div style = "font-size: 12px; margin-top: 10px; opacity: 0.8; font-family: 'Courier New';">
             Please allow location access to auto-center the map.
         </div>
+    </div>
+
+    <!-- Manual coordinate dialoge -->
+    <div id = "coordinate-prompt">
+        <h3>Set Your Location</h3>
+
+        <p style = "font-size: 12px; margin-bottom: 15px; opacity: 0.8; font-family: 'Courier New';">
+            Location services are disabled or unavailable. Please enter your coordinates manually.
+        </p>
+
+        <div>
+            <label> Latitude:
+                <input type = "number" id = "latitude-input" placeholder = "e.g. 49.1934" step = "0.1" >
+
+            </label>
+        </div>
+        <div>
+            <label> Longitude:
+                <input type = "number" id = "longitude-input" placeholder = "e.g. -123.1751" step = "0.1" >
+
+            </label>
+        </div>
+
+        <button onclick = "setCoordinates()">Use Manual Coordinates</button>
+        <button class = "location-button" onclick = "requestLocation()"> Try Location Services Again</button>
+
     </div>
 
     <!-- Leaflet JavaScript -->
@@ -75,11 +166,13 @@
         function requestLocation() {
             // Show loading screen
             document.getElementById('loading').style.display = 'block';
-            //document.getElementById('coordinate-prompt').style.display = 'none';
+            document.getElementById('coordinate-prompt').style.display = 'none';
 
             // Check if location is supported by browser
             if (!navigator.geolocation) {
                 console.log('Location not supported');
+                showCoordinatePrompt('Auto location is not supported by your browser');
+
                 return;
 
             }
@@ -128,10 +221,11 @@
                     }
 
                     console.log('Error getting location:', errorMessage);
+                    showCoordinatePrompt(errorMessage);
 
                 },
 
-                // Options
+                // Location options
                 {
                     enableHighAccuracy: true,
                     timeout: 10000, // 10 seconds
@@ -139,6 +233,40 @@
 
                 }
             );
+        }
+
+        function showCoordinatePrompt(reason) {
+            // Hide other screens
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('coordinate-prompt').style.display = 'block';
+
+            const reasonElement = document.querySelector('#coordinate-prompt p');
+            
+            if (reasonElement) {
+                reasonElement.textContent = reason;
+
+            }
+        }
+
+        function setCoordinates() {
+            const latitude = parseFloat(document.getElementById('latitude-input').value);
+            const longitude = parseFloat(document.getElementById('longitude-input').value);
+
+            // Check for valid coordinates
+            if (isNaN(latitude) || isNaN(longitude) || latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+                alert('Invalid coordinates. Please enter valid latitude and longitude values (Between -90 and 90).');
+                
+                return;
+
+            }
+
+            userLatitude = latitude;
+            userLongitude = longitude;
+
+            // Hide prompt and show map
+            document.getElementById('coordinate-prompt').style.display = 'none';
+            initializeMap();
+
         }
 
         function initializeMap() {
