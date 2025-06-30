@@ -160,6 +160,16 @@
             })
             .addTo(map);
 
+            // Add location marker
+            L.circleMarker([userLatitude, userLongitude], {
+                radius: 6,
+                weight: 2,
+                color: '#6ea3ee',
+                fillColor: 'rgba(0, 0, 0, 0)'
+
+            })
+            .addTo(map);
+
             console.log('Map created successfully');
 
         }
