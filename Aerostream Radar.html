@@ -201,6 +201,8 @@
         let map;
         let userLatitude, userLongitude;
 
+        let controlsVisible = true;
+        
         // Start getting location on page load
         window.onload = function() {
             requestLocation();
@@ -327,7 +329,7 @@
             
             // OpenStreetMap layer
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19
+                maxZoom: 15
 
             })
             .addTo(map);
@@ -363,10 +365,34 @@
 
         function centerMap() {
             if (map && userLatitude && userLongitude) {
-                map.setView([userLatitude, userLongitude], 10)
+                map.setView([userLatitude, userLongitude], map.getZoom())
 
             }
         }
+
+        // Keyboard shorcuts
+        document.addEventListener('keydown', function(event) {
+            switch(event.key) {
+                case '+':
+                case '=':
+                    zoomIn();
+
+                    break
+                
+                case '-':
+                case '_':
+                    zoomOut();
+
+                    break;
+
+                case 'c':
+                case 'C':
+                    centerMap();
+
+                    break;
+                
+            }
+        });
 
     </script>
 </body>
