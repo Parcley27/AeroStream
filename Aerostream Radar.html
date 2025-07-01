@@ -60,7 +60,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rbga(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.9);
+            color: #6ea3ee;
             padding: 30px;
             border-radius: 5px;
             border: 1px solid #6ea3ee;
@@ -115,7 +116,7 @@
         }
 
         /* Controls */
-        #controls {
+        #controls-display {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -125,25 +126,23 @@
             border-radius: 5px;
             z-index: 1000;
             border: 1px solid #6ea3ee;
-
-            display: flex;
+            display: none;
             flex-direction: column;
             gap: 10px;
             font-family: 'Courier New';
 
         }
-
-        /* Horizontal zoom button row */
         .zoom-buttons {
+            /* Horizontal zoom button row */
             display: flex;
             gap: 10px;
 
         }
 
         /* Buttons style */
-        #controls button {
+        #controls-display button {
             padding: 8px 12px;
-            background: #000000;
+            background: #1c293c;
             color: #6ea3ee;
             border: 1px solid #6ea3ee;
             cursor: pointer;
@@ -156,14 +155,14 @@
         }
 
         /* Button hover effect */
-        #controls button:hover {
+        #controls-display button:hover {
             background: #6ea3ee;
             color: #1c293c;
 
         }
 
         /* Span styling */
-        #controls span {
+        #controls-display span {
             font-size: 12px;
             padding: 4px 0;
 
@@ -177,14 +176,18 @@
     <div id = "map"></div>
 
     <!-- Controls display -->
-    <div id="controls">
+    <div id="controls-display">
         <div class="zoom-buttons">
             <button onclick="zoomOut()">Zoom Out</button>
             <button onclick="zoomIn()">Zoom In</button>
         </div>
 
         <button onclick="centerMap()">Center Map</button>
-        <span>Press V to toggle cursor</span>
+
+        <span>  </span>
+
+        <span>Press H to toggle cursor view</span>
+        <span>Press V to toggle controls view</span>
 
     </div>
 
@@ -230,6 +233,8 @@
     <script>
         let map;
         let userLatitude, userLongitude;
+
+        let controlsVisible = false;
 
         let cursorVisible = true;
         
@@ -382,6 +387,9 @@
 
             console.log('Map created successfully');
 
+            // Show map controls
+            toggleControls()
+
         }
         
         // Map controls
@@ -416,6 +424,26 @@
         }
 
         //Extra controls
+        function toggleControls() {
+            const controls = document.getElementById('controls-display');
+            
+            if (!controlsVisible) {
+                controls.style.display = 'flex';
+
+                console.log('Controls shown');
+
+            } else {
+                controls.style.display = 'none';
+                
+                console.log('Controls hidden');
+
+            }
+
+            controlsVisible = !controlsVisible;
+
+            
+        }
+
         function toggleCursor() {            
             if (!cursorVisible) {
                 document.body.classList.remove('hide-cursor');
@@ -464,6 +492,13 @@
 
                     break;
                 
+                case 'v':
+                case 'V':
+                    console.log('Toggling controls...')
+                    toggleControls();
+                    
+                    break;
+
             }
         });
 
