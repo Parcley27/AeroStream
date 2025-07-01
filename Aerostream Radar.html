@@ -108,12 +108,55 @@
 
         }
 
+        /* Map controls */
+        #map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #6ea3ee;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+            border: 1px solid #6ea3ee;
+
+        }
+
+        #map-controls button {
+            display: block;
+            margin: 5px 0;
+            padding: 8px 12px;
+            background: #000000;
+            color: #6ea3ee;
+            border: 1px solid #6ea3ee;
+            cursor: pointer;
+            font-family: 'Courier New';
+            width: 120px;
+            transition: all 0.3s ease;
+            font-size: 12px;
+
+        }
+
+        #map-controls button:hover {
+            background: #6ea3ee;
+            color: #1c293c;
+
+        }
+
     </style>
 </head>
 
 <body>
     <!-- Map container -->
     <div id = "map"></div>
+
+    <!-- Map controls -->
+     <div id = "map-controls">
+        <button onclick = "zoomIn()">Zoom In</button>
+        <button onclick = "zoomOut()">Zoom Out</button>
+        <button onclick = "centerMap()">Center Map</button>
+
+     </div>
 
     <!-- Automatic coordinate dialog -->
     <div id = "loading">
@@ -122,6 +165,7 @@
         <div style = "font-size: 12px; margin-top: 10px; opacity: 0.8; font-family: 'Courier New';">
             Please allow location access to auto-center the map.
         </div>
+
     </div>
 
     <!-- Manual coordinate dialoge -->
@@ -301,6 +345,29 @@
             console.log('Map created successfully');
 
         }
+        
+        // Map controls
+        function zoomIn() {
+            if (map) {
+                map.zoomIn()
+
+            }
+        }
+
+        function zoomOut() {
+            if (map) {
+                map.zoomOut()
+
+            }
+        }
+
+        function centerMap() {
+            if (map && userLatitude && userLongitude) {
+                map.setView([userLatitude, userLongitude], 10)
+
+            }
+        }
+
     </script>
 </body>
 </html>
