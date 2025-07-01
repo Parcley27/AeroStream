@@ -22,15 +22,23 @@
             height: 100vh;
 
         }
+        .hide-cursor {
+            /* Cursor visibility */
+            cursor: none !important;
 
-        /* Grayscale filter for map */
+        }
+        .hide-cursor * {
+            cursor: none !important;
+
+        }
         .leaflet-tile-pane {
+            /* Grayscale filter for map */
             filter: grayscale(100%) contrast(1.2);
 
         }
 
         /* Loading screen */
-        #loading {
+        #loading-screen {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -96,20 +104,18 @@
             color: #1c293c;
 
         }
-
         .location-button {
             background: #000000 !important;
             margin-bottom: 5px !important;
 
         }
-
         .location-button:hover {
             background: #6ea3ee !important;
 
         }
 
-        /* Map controls */
-        #map-controls {
+        /* Controls */
+        #controls {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -120,26 +126,46 @@
             z-index: 1000;
             border: 1px solid #6ea3ee;
 
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-family: 'Courier New';
+
         }
 
-        #map-controls button {
-            display: block;
-            margin: 5px 0;
+        /* Horizontal zoom button row */
+        .zoom-buttons {
+            display: flex;
+            gap: 10px;
+
+        }
+
+        /* Buttons style */
+        #controls button {
             padding: 8px 12px;
             background: #000000;
             color: #6ea3ee;
             border: 1px solid #6ea3ee;
             cursor: pointer;
-            font-family: 'Courier New';
-            width: 120px;
-            transition: all 0.3s ease;
             font-size: 12px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex: 1;
+            min-width: 80px;
 
         }
 
-        #map-controls button:hover {
+        /* Button hover effect */
+        #controls button:hover {
             background: #6ea3ee;
             color: #1c293c;
+
+        }
+
+        /* Span styling */
+        #controls span {
+            font-size: 12px;
+            padding: 4px 0;
 
         }
 
@@ -150,16 +176,20 @@
     <!-- Map container -->
     <div id = "map"></div>
 
-    <!-- Map controls -->
-     <div id = "map-controls">
-        <button onclick = "zoomIn()">Zoom In</button>
-        <button onclick = "zoomOut()">Zoom Out</button>
-        <button onclick = "centerMap()">Center Map</button>
+    <!-- Controls display -->
+    <div id="controls">
+        <div class="zoom-buttons">
+            <button onclick="zoomOut()">Zoom Out</button>
+            <button onclick="zoomIn()">Zoom In</button>
+        </div>
 
-     </div>
+        <button onclick="centerMap()">Center Map</button>
+        <span>Press V to toggle cursor</span>
+
+    </div>
 
     <!-- Automatic coordinate dialog -->
-    <div id = "loading">
+    <div id = "loading-screen">
         <div style = "font-family: 'Courier New';">Getting your location...</div>
 
         <div style = "font-size: 12px; margin-top: 10px; opacity: 0.8; font-family: 'Courier New';">
@@ -201,7 +231,7 @@
         let map;
         let userLatitude, userLongitude;
 
-        let controlsVisible = true;
+        let cursorVisible = true;
         
         // Start getting location on page load
         window.onload = function() {
@@ -210,8 +240,10 @@
         };
 
         function requestLocation() {
+            console.log('Requesting location...');
+
             // Show loading screen
-            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loading-screen').style.display = 'block';
             document.getElementById('coordinate-prompt').style.display = 'none';
 
             // Check if location is supported by browser
@@ -232,7 +264,7 @@
                     userLatitude = position.coords.latitude;
                     userLongitude = position.coords.longitude;
 
-                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('loading-screen').style.display = 'none';
 
                     initializeMap();
 
@@ -283,7 +315,7 @@
 
         function showCoordinatePrompt(reason) {
             // Hide other screens
-            document.getElementById('loading').style.display = 'none';
+            document.getElementById('loading-screen').style.display = 'none';
             document.getElementById('coordinate-prompt').style.display = 'block';
 
             const reasonElement = document.querySelector('#coordinate-prompt p');
@@ -295,6 +327,8 @@
         }
 
         function setCoordinates() {
+            console.log('Setting coordinates...');
+
             const latitude = parseFloat(document.getElementById('latitude-input').value);
             const longitude = parseFloat(document.getElementById('longitude-input').value);
 
@@ -312,6 +346,8 @@
             // Hide prompt and show map
             document.getElementById('coordinate-prompt').style.display = 'none';
             initializeMap();
+
+            console.log('Coordinates set');
 
         }
 
@@ -334,7 +370,7 @@
             })
             .addTo(map);
 
-            // Add location marker
+            // Location marker
             L.circleMarker([userLatitude, userLongitude], {
                 radius: 6,
                 weight: 2,
@@ -353,21 +389,48 @@
             if (map) {
                 map.zoomIn()
 
-            }
+                console.log('Zoomed in');
+
+            } else { console.log('Zoom in error'); }
+
         }
 
         function zoomOut() {
             if (map) {
                 map.zoomOut()
 
-            }
+                console.log('Zoomed out');
+
+            } else { console.log('Zoom out error'); }
+
         }
 
         function centerMap() {
             if (map && userLatitude && userLongitude) {
                 map.setView([userLatitude, userLongitude], map.getZoom())
 
+                console.log('Map centered');
+
+            } else { console.log('Map centering error'); }
+
+        }
+
+        //Extra controls
+        function toggleCursor() {            
+            if (!cursorVisible) {
+                document.body.classList.remove('hide-cursor');
+
+                console.log('Cursor shown');
+
+            } else {
+                document.body.classList.add('hide-cursor');
+
+                console.log('Cursor hidden');
+
             }
+
+            cursorVisible = !cursorVisible;
+
         }
 
         // Keyboard shorcuts
@@ -375,19 +438,29 @@
             switch(event.key) {
                 case '+':
                 case '=':
+                    console.log('Zooming in...');
                     zoomIn();
 
                     break
                 
                 case '-':
                 case '_':
+                    console.log('Zooming out...');
                     zoomOut();
 
                     break;
 
                 case 'c':
                 case 'C':
+                    console.log('Centering map...');
                     centerMap();
+
+                    break;
+                
+                case 'h':
+                case 'H':
+                    console.log('Toggling cursor...');
+                    toggleCursor();
 
                     break;
                 
