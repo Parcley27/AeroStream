@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<!-- CSS Styling -->
 <head>
     <meta charset = "UTF-8">
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
@@ -10,10 +12,55 @@
     <link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
+        :root {
+            --general-accent: #6ea3ee;
+
+            /* Dark mode colours */
+            --dark-background: #000000;
+            --dark-popup: rgba(0, 0, 0, 0.8);
+            --dark-popup-solid: rgba(0, 0, 0, 0.9);
+
+            --dark-text: #6ea3ee;
+            --dark-border: #6ea3ee;
+
+            --dark-primary: #cbdbf6;
+            --dark-secondary: #6ea3ee;;
+            --dark-tertiary: #223f6d;
+            --dark-accent: #6ea3ee;
+
+            /* Light mode */
+            --light-background: #ffffff;
+            --light-popup: rgba(255, 255, 255, 0.8);
+            --light-popup-solid: rgba(255, 255, 255, 0.9);
+
+            --light-text: #253a5b;
+            --light-border: #253a5b;
+
+            --light-primary: #6ea3ee;
+            --light-secondary: #223f6d;
+            --light-tertiary: #cbdbf6;
+            --light-accent: #6ea3ee;
+
+        }
+
         body {
             margin: 0;
             padding: 0;
             font-family: 'Courier New';
+            transition: all 0.3s ease;
+
+        }
+
+        /* Dark (default)/light mode */
+        body.dark-mode {
+            background-color: var(--dark-background);
+            color: var(--dark-text);
+
+        }
+
+        body.light-mode {
+            background-color: var(--light-background);
+            color: var(--light-text);
 
         }
 
@@ -33,6 +80,10 @@
         }
         .leaflet-tile-pane {
             /* Grayscale filter for map */
+            filter: grayscale(100%) contrast(1.2) invert(1);
+
+        }
+        .light-mode .leaflet-tile-pane {
             filter: grayscale(100%) contrast(1.2);
 
         }
@@ -43,14 +94,20 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: #6ea3ee;
+            background: var(--dark-popup-solid);
+            color: var(--dark-text);
             padding: 30px;
             border-radius: 5px;
-            border: 1px solid #6ea3ee;
+            border: 1px solid var(--dark-border);
             z-index: 2000;
             text-align: center;
             font-size: 16px;
+
+        }
+        .light-mode #loading-screen {
+            background: var(--light-popup-solid);
+            color: var(--light-text);
+            border: 1px solid var(--light-border);
 
         }
 
@@ -60,37 +117,53 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: #6ea3ee;
+            background: var(--dark-popup-solid);
+            color: var(--dark-text);
             padding: 30px;
             border-radius: 5px;
-            border: 1px solid #6ea3ee;
+            border: 1px solid var(--dark-border);;
             z-index: 2000;
             display: none;
+
+        }
+        .light-mode #coordinate-prompt {
+            background: var(--light-popup-solid);
+            color: var(--light-text);
+            border: 1px solid var(--light-border);
 
         }
 
         #coordinate-prompt h3 {
             margin-top: 0;
-            color: #6ea3ee;
+            color: var(--dark-text);
+
+        }
+        .light-mode #coordinate-prompt h3 {
+            color: var(--light-text);
 
         }
 
         #coordinate-prompt input {
-            background: #000000;
-            color: #6ea3ee;
-            border: 1px solid #6ea3ee;
+            background: var(--dark-background);
+            color: var(--dark-text);
+            border: 1px solid var(--dark-border);
             padding: 8px;
             margin: 5px;
             font-family: 'Courier New';
             width: 150px;
 
         }
+        .light-mode #coordinate-prompt input {
+            background: var(--light-background);
+            color: var(--light-text);
+            border: 1px solid var(--light-border);
+
+        }
 
         #coordinate-prompt button {
-            background: #1c293c;
-            color: #6ea3ee;
-            border: 1px solid #6ea3ee;
+            background: var(--dark-tertiary);
+            color: var(--dark-text);
+            border: 1px solid var(--dark-border);
             padding: 10px 20px;
             margin-top: 15px;
             cursor: pointer;
@@ -99,19 +172,41 @@
             width: 100%;
 
         }
+        .light-mode #coordinate-prompt button {
+            background: var(--light-tertiary);
+            color: var(--light-text);
+            border: 1px solid var(--light-border);
+
+        }
 
         #coordinate-prompt button:hover {
-            background: #6ea3ee;
-            color: #1c293c;
+            background: var(--dark-text);
+            color: var(--dark-tertiary);
+
+        }
+        .light-mode #coordinate-prompt button:hover {
+            background: var(--light-accent);
+            color: var(--light-text);
 
         }
         .location-button {
-            background: #000000 !important;
+            background: var(--dark-background) !important;
             margin-bottom: 5px !important;
 
         }
+        .light-mode .location-button {
+            background: var(--light-background) !important;
+            color: var(--light-text);
+
+        }
         .location-button:hover {
-            background: #6ea3ee !important;
+            background: var(--dark-text) !important;
+            color: var(--dark-tertiary) !important;
+
+        }
+        .light-mode .location-button:hover {
+            background: var(--light-accent) !important;
+            color: var(--light-text) !important;
 
         }
 
@@ -120,16 +215,22 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            color: #6ea3ee;
+            background: var(--dark-background);
+            color: var(--dark-text);
             padding: 10px;
             border-radius: 5px;
+            border: 1px solid var(--dark-border);
             z-index: 1000;
-            border: 1px solid #6ea3ee;
             display: none;
             flex-direction: column;
             gap: 10px;
             font-family: 'Courier New';
+
+        }
+        .light-mode #controls-display {
+            background: var(--light-background);
+            color: var(--light-text);
+            border: 1px solid var(--light-border);
 
         }
         .zoom-buttons {
@@ -142,9 +243,9 @@
         /* Buttons style */
         #controls-display button {
             padding: 8px 12px;
-            background: #1c293c;
-            color: #6ea3ee;
-            border: 1px solid #6ea3ee;
+            background: var(--dark-background);
+            color: var(--dark-text);
+            border: 1px solid var(--dark-border);
             cursor: pointer;
             font-size: 12px;
             transition: all 0.3s ease;
@@ -153,11 +254,22 @@
             min-width: 80px;
 
         }
+        .light-mode #controls-display button {
+            background: var(--light-background);
+            color: var(--light-text);
+            border: 1px solidvar(--light-border);
+
+        }
 
         /* Button hover effect */
         #controls-display button:hover {
-            background: #6ea3ee;
-            color: #1c293c;
+            background: var(--dark-button-hover);
+            color: var(--dark-accent);
+
+        }
+        .light-mode #controls-display button:hover {
+            background: var(--light-accent);
+            color: var(--light-accent-hover);
 
         }
 
@@ -171,18 +283,21 @@
     </style>
 </head>
 
-<body>
+<!-- HTML Structure -->
+<body class = "dark-mode" >
     <!-- Map container -->
     <div id = "map"></div>
 
     <!-- Controls display -->
-    <div id="controls-display">
+    <div id = "controls-display">
         <div class="zoom-buttons">
-            <button onclick="zoomOut()">Zoom Out</button>
-            <button onclick="zoomIn()">Zoom In</button>
+            <button onclick = "zoomOut()">Zoom Out (-)</button>
+            <button onclick = "zoomIn()">Zoom In (+)</button>
         </div>
 
-        <button onclick="centerMap()">Center Map</button>
+        <button onclick = "centerMap()">Center Map (C)</button>
+        <button onclick = "resetMap()">Reset View (R)</button>
+        <button onclick = "toggleApperance()">Toggle apperance (L)</button>
 
         <span>  </span>
 
@@ -229,7 +344,8 @@
 
     <!-- Leaflet JavaScript -->
     <script src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    
+    <!-- JS Scripting -->
     <script>
         let map;
         let userLatitude, userLongitude;
@@ -379,7 +495,7 @@
             L.circleMarker([userLatitude, userLongitude], {
                 radius: 6,
                 weight: 2,
-                color: '#6ea3ee',
+                color: 'var(--general-accent)',
                 fillColor: 'rgba(0, 0, 0, 0)'
 
             })
@@ -423,6 +539,16 @@
 
         }
 
+        function resetMap() {
+            if (map && userLatitude && userLongitude) {
+                map.setView([userLatitude, userLongitude], 10)
+
+                console.log('Map reset');
+
+            } else { console.log('Map reset error'); }
+
+        }
+
         //Extra controls
         function toggleControls() {
             const controls = document.getElementById('controls-display');
@@ -444,7 +570,7 @@
             
         }
 
-        function toggleCursor() {            
+        function toggleCursor() {
             if (!cursorVisible) {
                 document.body.classList.remove('hide-cursor');
 
@@ -459,6 +585,24 @@
 
             cursorVisible = !cursorVisible;
 
+        }
+
+        function toggleApperance() {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+
+            if (isDarkMode) {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+
+                console.log('Switched to light mode');
+
+            } else {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+
+                console.log('Switched to dark mode');
+
+            }
         }
 
         // Keyboard shorcuts
@@ -485,10 +629,24 @@
 
                     break;
                 
+                case 'r':
+                case 'R':
+                    console.log('Resetting map...');
+                    resetMap();
+                    
+                    break;
+
                 case 'h':
                 case 'H':
                     console.log('Toggling cursor...');
                     toggleCursor();
+
+                    break;
+                
+                case 'l':
+                case 'L':
+                    console.log('Toggling apperance...');
+                    toggleApperance();
 
                     break;
                 
