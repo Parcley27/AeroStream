@@ -507,7 +507,7 @@
             aircraftLayer = L.layerGroup().addTo(map);
 
             // Fetch initial set of data
-            //fetchAircraftData();
+            fetchAircraftData();
 
             console.log('Map created successfully');
 
@@ -518,10 +518,9 @@
         
         // ADSB.lol API integration
         async function fetchAircraftData() {
-            // Search for aircraft within currently visibe map boundry
-            //const bounds = map.getCurrentPosition();
 
-            // Radius around search center (in nm)
+            // Search radius around given center (in nautical miles)
+            // Will be made smarter soon
             let radius = 50;
 
             try {
@@ -558,14 +557,14 @@
             aircraft.forEach(ac => {
                 // Check for valid position data
                 if (ac.lat && ac.lon) {
-                    const lat = ac.lat;
-                    const lng = ac.lon;
+                    const latitude = ac.lat;
+                    const longitude = ac.lon;
                     const callsign = ac.flight?.trim() || ac.r || 'Unknown';
                     const icao = ac.hex || 'Unknown';
                     const altitude = ac.alt_baro || ac.altitude || 'N/A';
                     
-                    // Create red circle marker
-                    const marker = L.circleMarker([lat, lng], {
+                    // Red circle marker
+                    const marker = L.circleMarker([latitude, longitude], {
                         color: '#ff0000',
                         fillColor: '#ff0000',
                         fillOpacity: 0.8,
@@ -574,13 +573,13 @@
 
                     });
                     
-                    // Add popup with basic info
+                    // Popup with basic info
                     marker.bindPopup(`
                         <strong>${callsign}</strong><br>
                         ICAO: ${icao}<br>
                         Alt: ${altitude}<br>
-                        Lat: ${lat.toFixed(4)}<br>
-                        Lng: ${lng.toFixed(4)}
+                        Lat: ${latitude.toFixed(4)}<br>
+                        Lng: ${longitude.toFixed(4)}
 
                     `);
                     
