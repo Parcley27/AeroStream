@@ -258,7 +258,7 @@
         .light-mode #controls-display button {
             background: var(--light-background);
             color: var(--light-text);
-            border: 1px solidvar(--light-border);
+            border: 1px solid var(--light-border);
 
         }
 
@@ -361,6 +361,7 @@
 
         };
 
+        // Startup and create map
         function requestLocation() {
             console.log('Requesting location...');
 
@@ -502,6 +503,12 @@
             })
             .addTo(map);
 
+            // Create layer for aircraft markers
+            aircraftLayer = L.layerGroup().addTo(map);
+
+            // Fetch initial set of data
+            //fetchAircraftData();
+
             console.log('Map created successfully');
 
             // Show map controls
@@ -509,6 +516,84 @@
 
         }
         
+        // ADSB.lol API integration
+        async function fetchAircraftData() {
+            // Search for aircraft within currently visibe map boundry
+            //const bounds = map.getCurrentPosition();
+
+            // Radius around search center (in nm)
+            let radius = 50;
+
+            try {
+                console.log('Fetching aircraft data around center:', {userLongitude, userLatitude}, `with ${radius}nm radius`);
+
+                const response = await fetch(
+                    `http://localhost:4027/aircraft?lat=${userLatitude}&lon=${userLongitude}&dist=${radius}`
+                
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                
+                }
+
+                const data = await response.json();
+                console.log('Recieved aircraft data:', data.ac?.length || 0, 'aircraft were found within radius');
+                console.log('Raw API response:', data);
+                
+                // Display aircraft positions
+                updateAircraftDisplay(data.ac || []);
+
+            } catch (error) {
+                console.error('Error fetching aircraft data:', error);
+
+            }
+        }
+
+        function updateAircraftDisplay(aircraft) {
+            // Clear existing markers
+            aircraftLayer.clearLayers();
+
+            // Add marker for each aircraft
+            aircraft.forEach(ac => {
+                // Check for valid position data
+                if (ac.lat && ac.lon) {
+                    const lat = ac.lat;
+                    const lng = ac.lon;
+                    const callsign = ac.flight?.trim() || ac.r || 'Unknown';
+                    const icao = ac.hex || 'Unknown';
+                    const altitude = ac.alt_baro || ac.altitude || 'N/A';
+                    
+                    // Create red circle marker
+                    const marker = L.circleMarker([lat, lng], {
+                        color: '#ff0000',
+                        fillColor: '#ff0000',
+                        fillOpacity: 0.8,
+                        radius: 4,
+                        weight: 1
+
+                    });
+                    
+                    // Add popup with basic info
+                    marker.bindPopup(`
+                        <strong>${callsign}</strong><br>
+                        ICAO: ${icao}<br>
+                        Alt: ${altitude}<br>
+                        Lat: ${lat.toFixed(4)}<br>
+                        Lng: ${lng.toFixed(4)}
+
+                    `);
+                    
+                    // Add to aircraft layer
+                    marker.addTo(aircraftLayer);
+                    
+                }
+            });
+
+            console.log('Displayed', aircraftLayer.getLayers().length, 'aircraft on the map');
+
+        }
+
         // Map controls
         function zoomIn() {
             if (map) {
@@ -656,6 +741,14 @@
                     console.log('Toggling controls...')
                     toggleControls();
                     
+                    break;
+                
+                case 'd':
+                case 'D':
+                    console.log('Running debug');
+                    aircraftLayer.clearLayers();
+                    fetchAircraftData();
+
                     break;
 
             }
