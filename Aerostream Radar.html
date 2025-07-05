@@ -3,6 +3,7 @@
 
 <!-- CSS Styling -->
 <head>
+    <!-- Page setup-->
     <meta charset = "UTF-8">
     <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
     
@@ -11,6 +12,7 @@
     <!-- Map import -->
     <link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+    <!-- Element styles-->
     <style>
         :root {
             --general-accent: #6ea3ee;
@@ -527,7 +529,7 @@
         }
         
         // ADSB.lol API integration
-        async function fetchAircraftData(centerLatitude, centerLongitude, searchRadius = 50) {
+        async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = 50) {
             try {
                 console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
 
@@ -750,7 +752,6 @@
                 case 'd':
                 case 'D':
                     console.log('Running debug');
-                    aircraftLayer.clearLayers();
                     fetchAircraftData();
 
                     break;
