@@ -361,7 +361,7 @@
 
         };
 
-        // Startup and create map
+        // Startup
         function requestLocation() {
             console.log('Requesting location...');
 
@@ -474,6 +474,7 @@
 
         }
 
+        // Initialize map
         function initializeMap() {
             console.log('Loading map at:', userLatitude, userLongitude);
 
@@ -502,12 +503,21 @@
 
             })
             .addTo(map);
+            
+            // Refresh data on map move
+            map.on('moveend zoomend', function() {
+                console.log('Map moved or zoomed, updating aircraft data for new map zone');
+
+                const center = map.getCenter();
+                fetchAircraftData(center.lat, center.lng)
+
+            });
 
             // Create layer for aircraft markers
             aircraftLayer = L.layerGroup().addTo(map);
 
             // Fetch initial set of data
-            fetchAircraftData();
+            fetchAircraftData(userLatitude, userLongitude);
 
             console.log('Map created successfully');
 
@@ -517,17 +527,12 @@
         }
         
         // ADSB.lol API integration
-        async function fetchAircraftData() {
-
-            // Search radius around given center (in nautical miles)
-            // Will be made smarter soon
-            let radius = 50;
-
+        async function fetchAircraftData(centerLatitude, centerLongitude, searchRadius = 50) {
             try {
-                console.log('Fetching aircraft data around center:', {userLongitude, userLatitude}, `with ${radius}nm radius`);
+                console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
 
                 const response = await fetch(
-                    `http://localhost:4027/aircraft?lat=${userLatitude}&lon=${userLongitude}&dist=${radius}`
+                    `http://localhost:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
                 
                 );
 
@@ -537,7 +542,7 @@
                 }
 
                 const data = await response.json();
-                console.log('Recieved aircraft data:', data.ac?.length || 0, 'aircraft were found within radius');
+                console.log('Recieved aircraft data:', data.ac?.length || 0, 'aircraft were found within search radius');
                 console.log('Raw API response:', data);
                 
                 // Display aircraft positions
@@ -634,7 +639,7 @@
 
         }
 
-        //Extra controls
+        // Extra controls
         function toggleControls() {
             const controls = document.getElementById('controls-display');
             
