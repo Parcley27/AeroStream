@@ -534,7 +534,7 @@
                 console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
 
                 const response = await fetch(
-                    `http://localhost:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
+                    `http://24.85.222.126:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
                 
                 );
 
