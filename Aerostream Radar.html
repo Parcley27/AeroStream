@@ -524,7 +524,7 @@
             // Fetch initial set of data
             fetchAircraftData(userLatitude, userLongitude);
 
-            // Start update loop (5s)
+            // Start update loop (10s)
             updateInterval = setInterval(fetchAircraftData, 5000);
 
             console.log('Map created successfully');
@@ -538,7 +538,7 @@
         async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = 50) {
             try {
                 console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
-
+                
                 const response = await fetch(
                     `http://24.85.222.126:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
                 
@@ -612,15 +612,14 @@
             const isDarkMode = document.body.classList.contains('dark-mode');
             const iconColour = isDarkMode ? 'var(--general-tertiary)' : 'var(--general-secondary)';
 
-            const heading = aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
+            const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
             const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
+            const speed = aircraft.gs || 0;
 
             // Scale vector length based on speed
             const minLength = 8;
-            const maxLength = 32;
-            const groundSpeed = aircraft.gs;
-
-            const vectorLength = minLength + (maxLength - minLength) * Math.min(groundSpeed / 500, 1);
+            const maxLength = 24;
+            const vectorLength = minLength + (maxLength - minLength) * Math.min(speed / 500, 1);
             const vectorEnd = -4 - vectorLength;
 
             const iconHtml = `
