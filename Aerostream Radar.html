@@ -524,6 +524,9 @@
             // Fetch initial set of data
             fetchAircraftData(userLatitude, userLongitude);
 
+            // Start update loop (5s)
+            updateInterval = setInterval(fetchAircraftData, 5000);
+
             console.log('Map created successfully');
 
             // Show map controls
@@ -569,12 +572,14 @@
                 if (aircraft.lat && aircraft.lon) {
                     const latitude = aircraft.lat;
                     const longitude = aircraft.lon;
-                    const callsign = aircraft.flight?.trim() || ac.r || 'Unknown';
+                    const callsign = aircraft.flight?.trim() || aircraft.r || 'Unknown';
                     const icao = aircraft.hex || 'Unknown';
                     // Feet
                     const altitude = aircraft.alt_baro || aircraft.altitude || 'N/A';
                     // Kts
                     const groundSpeed = aircraft.gs || 'Unknown'
+
+                    const heading = aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
 
                     const marker = L.marker([latitude, longitude], {
                         icon: createAircraftIcon(aircraft)
@@ -588,7 +593,8 @@
                         Alt: ${altitude}<br>
                         Lat: ${latitude.toFixed(4)}<br>
                         Lng: ${longitude.toFixed(4)}<br>
-                        Spd: ${groundSpeed}
+                        Spd: ${groundSpeed}<br>
+                        Hdg: ${heading}
 
                     `);
                     
@@ -606,8 +612,8 @@
             const isDarkMode = document.body.classList.contains('dark-mode');
             const iconColour = isDarkMode ? 'var(--general-tertiary)' : 'var(--general-secondary)';
 
-            const heading = aircraft.true_heading || 0;
-            const callsign = aircraft.flight?.trim() || ac.r || 'N/A';
+            const heading = aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
+            const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
 
             // Scale vector length based on speed
             const minLength = 8;
@@ -793,9 +799,26 @@
                 case 'd':
                 case 'D':
                     console.log('Running debug');
-                    fetchAircraftData();
+
+                    if (updateInterval) {
+                        clearInterval(updateInterval);
+                        console.log('Refresh timer stopped');
+                        
+                    } else {
+                        updateInterval = setInterval(fetchAircraftData, 5000);
+                        console.log('Refresh timer started');
+
+                    }
 
                     break;
+
+            }
+        });
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (updateInterval) {
+                clearInterval(updateInterval);
 
             }
         });
