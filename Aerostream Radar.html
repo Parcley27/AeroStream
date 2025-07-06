@@ -14,8 +14,11 @@
 
     <!-- Element styles-->
     <style>
+        /* Page colours */
         :root {
             --general-accent: #6ea3ee;
+            --general-secondary: #253a5b;
+            --general-tertiary: #cbdbf6;
 
             /* Dark mode colours */
             --dark-background: #000000;
@@ -276,7 +279,7 @@
 
         }
 
-        /* Span styling */
+        /* Span (text) styling */
         #controls-display span {
             font-size: 12px;
             padding: 4px 0;
@@ -556,27 +559,25 @@
             }
         }
 
-        function updateAircraftDisplay(aircraft) {
+        function updateAircraftDisplay(aircraftList) {
             // Clear existing markers
             aircraftLayer.clearLayers();
 
             // Add marker for each aircraft
-            aircraft.forEach(ac => {
+            aircraftList.forEach(aircraft => {
                 // Check for valid position data
-                if (ac.lat && ac.lon) {
-                    const latitude = ac.lat;
-                    const longitude = ac.lon;
-                    const callsign = ac.flight?.trim() || ac.r || 'Unknown';
-                    const icao = ac.hex || 'Unknown';
-                    const altitude = ac.alt_baro || ac.altitude || 'N/A';
-                    
-                    // Red circle marker
-                    const marker = L.circleMarker([latitude, longitude], {
-                        color: '#ff0000',
-                        fillColor: '#ff0000',
-                        fillOpacity: 0.8,
-                        radius: 4,
-                        weight: 1
+                if (aircraft.lat && aircraft.lon) {
+                    const latitude = aircraft.lat;
+                    const longitude = aircraft.lon;
+                    const callsign = aircraft.flight?.trim() || ac.r || 'Unknown';
+                    const icao = aircraft.hex || 'Unknown';
+                    // Feet
+                    const altitude = aircraft.alt_baro || aircraft.altitude || 'N/A';
+                    // Kts
+                    const groundSpeed = aircraft.gs || 'Unknown'
+
+                    const marker = L.marker([latitude, longitude], {
+                        icon: createAircraftIcon(aircraft)
 
                     });
                     
@@ -586,7 +587,8 @@
                         ICAO: ${icao}<br>
                         Alt: ${altitude}<br>
                         Lat: ${latitude.toFixed(4)}<br>
-                        Lng: ${longitude.toFixed(4)}
+                        Lng: ${longitude.toFixed(4)}<br>
+                        Spd: ${groundSpeed}
 
                     `);
                     
@@ -597,6 +599,41 @@
             });
 
             console.log('Displayed', aircraftLayer.getLayers().length, 'aircraft on the map');
+
+        }
+        
+        function createAircraftIcon(aircraft) {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const iconColour = isDarkMode ? 'var(--general-tertiary)' : 'var(--general-secondary)';
+
+            const heading = aircraft.true_heading || 0;
+            const callsign = aircraft.flight?.trim() || ac.r || 'N/A';
+
+            // Scale vector length based on speed
+            const minLength = 8;
+            const maxLength = 32;
+            const groundSpeed = aircraft.gs;
+
+            const vectorLength = minLength + (maxLength - minLength) * Math.min(groundSpeed / 500, 1);
+            const vectorEnd = -4 - vectorLength;
+
+            const iconHtml = `
+                <svg width="30" height="30" viewBox="-15 -15 30 30" style="overflow: visible;">
+                    <g transform="rotate(${heading})">
+                        <rect x="-4" y="-4" width="8" height="8" fill="none" stroke="${iconColour}" stroke-width="2"/>
+                        <line x1="0" y1="-4" x2="0" y2="${vectorEnd}" stroke="${iconColour}" stroke-width="2"/>
+                    </g>
+                </svg>
+                <!--<div class="callsign-label">${callsign}</div>-->
+            `;
+
+            return L.divIcon({
+                html: iconHtml,
+                className: 'aircraft-icon',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+
+            });
 
         }
 
@@ -686,11 +723,15 @@
                 document.body.classList.remove('dark-mode');
                 document.body.classList.add('light-mode');
 
+                fetchAircraftData();
+
                 console.log('Switched to light mode');
 
             } else {
                 document.body.classList.remove('light-mode');
                 document.body.classList.add('dark-mode');
+
+                fetchAircraftData();
 
                 console.log('Switched to dark mode');
 
