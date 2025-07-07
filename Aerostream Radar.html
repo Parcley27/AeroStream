@@ -544,6 +544,14 @@
                 
                 );
 
+                // Uncomment if hosting locally
+                /*
+                const response = await fetch(
+                    `http://localhost:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
+                
+                );
+                */
+
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 
@@ -579,7 +587,7 @@
                     // Kts
                     const groundSpeed = aircraft.gs || 'Unknown'
 
-                    const heading = aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
+                    const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
 
                     const marker = L.marker([latitude, longitude], {
                         icon: createAircraftIcon(aircraft)
