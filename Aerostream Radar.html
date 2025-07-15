@@ -20,6 +20,9 @@
             --general-secondary: #253a5b;
             --general-tertiary: #cbdbf6;
 
+            --general-alert: #ffff00;
+            --general-error: #ff0000;
+
             /* Dark mode colours */
             --dark-background: #000000;
             --dark-popup: rgba(0, 0, 0, 0.8);
@@ -215,6 +218,96 @@
 
         }
 
+        /* Aircraft panel */
+        #aircraft-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 280px;
+            background: var(--dark-popup);
+            color: var(--dark-text);
+            border: 1px solid var(--dark-border);
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            line-height: 1.4;
+
+        }
+        .light-mode #aircraft-panel {
+            background: var(--light-popup);
+            color: var(--light-text);
+            border-color: var(--light-border);
+
+        }
+
+        #aircraft-panel .panel-header {
+            border-bottom: 1px solid var(--dark-border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+        }
+        .light-mode #aircraft-panel .panel-header {
+            border-color: var(--light-border);
+
+        }
+
+        #aircraft-panel .close-button {
+            background: none;
+            border: 1px solid var(--dark-border);
+            color: var(--dark-text);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            transition: all 0.3s;
+
+        }
+        .light-mpde #aircraft-panel .close-button {
+            border: 1px solid var(--light-border);
+
+        }
+
+        #aircraft-panel .close-button:hover {
+            background: var(--dark-primary);
+            color: var(--dark-background);
+
+        }
+        .light-mode #aircraft-panel .close-button:hover {
+            background: var(--light-primary);
+            color: var(--light-background);
+
+        }
+
+        #aircraft-panel .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+
+        }
+        
+        #aircraft-panel .info-label {
+            font-weight: bold;
+            opacity: 0.8;
+
+        }
+        
+        #aircraft-panel .info-value {
+            text-align: right;
+
+        }
+        
+        /* Highlighted aircraft*/
+        .aircraft-selected {
+            color: #ffff00 !important;
+
+        }
+
         /* Controls */
         #controls-display {
             position: absolute;
@@ -303,7 +396,8 @@
 
         <button onclick = "centerMap()">Center Map (C)</button>
         <button onclick = "resetMap()">Reset View (R)</button>
-        <button onclick = "toggleApperance()">Toggle apperance (L)</button>
+        <button onclick = "toggleMapLabels()">Toggle Map Labels (L)</button>
+        <button onclick = "toggleApperance()">Toggle Apperance (A)</button>
 
         <span>  </span>
 
@@ -356,9 +450,35 @@
         let map;
         let userLatitude, userLongitude;
 
+        let openStreetMapTileLayer;
+        let noLabelTileLayer;
+        let currentTileLayer;
+        let usingNoLabels = false;
+
+        let selectedAircraft;
+
         let controlsVisible = false;
 
         let cursorVisible = true;
+
+        const keybinds = {
+            zoomIn: "+",
+            zoomInSecondary: "=",
+            zoomOut: "-",
+            zoomOutSecondary: "_",
+
+            centerMap: "c",
+            resetMap: "r",
+
+            toggleLabels: "l",
+            toggleApperance: "a",
+
+            toggleCursor: "h",
+            changeView: "v",
+
+            debug: "d"
+
+        }
         
         // Start getting location on page load
         window.onload = function() {
@@ -493,11 +613,19 @@
             });
             
             // OpenStreetMap layer
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            openStreetMapTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 15
 
-            })
-            .addTo(map);
+            });
+
+            // No label map layer
+            noLabelTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+                maxZoom: 20
+
+            });
+
+            currentTileLayer = openStreetMapTileLayer;
+            currentTileLayer.addTo(map);
 
             // Location marker
             L.circleMarker([userLatitude, userLongitude], {
@@ -535,7 +663,7 @@
         }
         
         // ADSB.lol API integration
-        async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = 50) {
+        async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = 75) {
             try {
                 console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
                 
@@ -605,6 +733,10 @@
                         Hdg: ${heading}
 
                     `);
+
+                    marker.aircraftData = aircraft
+
+                    marker.on('click', () => selectAircraft(aircraft))
                     
                     // Add to aircraft layer
                     marker.addTo(aircraftLayer);
@@ -616,9 +748,11 @@
 
         }
         
-        function createAircraftIcon(aircraft) {
+        function createAircraftIcon(aircraft, isSelected = false) {
+            //if (selectedAircraft.hex == aircraft.hex) { isSelected = true };
+
             const isDarkMode = document.body.classList.contains('dark-mode');
-            const iconColour = isDarkMode ? 'var(--general-tertiary)' : 'var(--general-secondary)';
+            const iconColour = isSelected ? 'var(--general-alert)' : isDarkMode ? 'var(--general-accent)' : 'var(--general-accent)';
 
             const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
             const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
@@ -626,8 +760,8 @@
 
             // Scale vector length based on speed
             const minLength = 8;
-            const maxLength = 24;
-            const vectorLength = minLength + (maxLength - minLength) * Math.min(speed / 500, 1);
+            const maxLength = 30;
+            const vectorLength = minLength + (maxLength - minLength) * Math.min(speed / 550, 1);
             const vectorEnd = -4 - vectorLength;
 
             const iconHtml = `
@@ -647,6 +781,23 @@
                 iconAnchor: [15, 15]
 
             });
+
+        }
+
+        function selectAircraft(aircraft) {
+            // Clear previous
+            //if (selectedAircraft.hex != aircraft.hex) {
+                createAircraftIcon(selectedAircraft);
+
+                console.log('Deselected aircraft:', aircraft.flight?.trim() || aircraft.r || 'N/A');
+
+            //}
+
+            selectedAircraft = aircraft;
+
+            createAircraftIcon(selectedAircraft, true);
+
+            console.log('Selected aircraft:', aircraft.flight?.trim() || aircraft.r || 'N/A');
 
         }
 
@@ -751,60 +902,87 @@
             }
         }
 
+        function toggleMapLabels() {
+            if (!map) return;
+
+            map.removeLayer(currentTileLayer);
+
+            if (usingNoLabels) {
+                currentTileLayer = openStreetMapTileLayer;
+                console.log('Switched to OpenStreetMap (with labels)');
+
+            } else {
+                currentTileLayer = noLabelTileLayer;
+                console.log('Switched to no label map');
+
+            }
+
+            currentTileLayer.addTo(map);
+            usingNoLabels = !usingNoLabels;
+
+        }
+
         // Keyboard shorcuts
         document.addEventListener('keydown', function(event) {
             switch(event.key) {
-                case '+':
-                case '=':
+                case keybinds.zoomIn:
+                case keybinds.zoomInSecondary:
                     console.log('Zooming in...');
                     zoomIn();
 
                     break
                 
-                case '-':
-                case '_':
+                case keybinds.zoomOut:
+                case keybinds.zoomOutSecondary:
                     console.log('Zooming out...');
                     zoomOut();
 
                     break;
 
-                case 'c':
-                case 'C':
+                case keybinds.centerMap:
+                case keybinds.centerMap.toUpperCase():
                     console.log('Centering map...');
                     centerMap();
 
                     break;
                 
-                case 'r':
-                case 'R':
+                case keybinds.resetMap:
+                case keybinds.resetMap.toUpperCase():
                     console.log('Resetting map...');
                     resetMap();
                     
                     break;
+                
+                case keybinds.toggleLabels:
+                case keybinds.toggleLabels.toUpperCase():
+                    console.log('Toggling map labels...');
+                    toggleMapLabels();
 
-                case 'h':
-                case 'H':
+                    break;
+
+                case keybinds.toggleCursor:
+                case keybinds.toggleCursor.toUpperCase():
                     console.log('Toggling cursor...');
                     toggleCursor();
 
                     break;
                 
-                case 'l':
-                case 'L':
+                case keybinds.toggleApperance:
+                case keybinds.toggleApperance.toUpperCase():
                     console.log('Toggling apperance...');
                     toggleApperance();
 
                     break;
                 
-                case 'v':
-                case 'V':
+                case keybinds.changeView:
+                case keybinds.changeView.toUpperCase():
                     console.log('Toggling controls...')
                     toggleControls();
                     
                     break;
                 
-                case 'd':
-                case 'D':
+                case keybinds.debug:
+                case keybinds.debug.toUpperCase():
                     console.log('Running debug');
 
                     if (updateInterval) {
