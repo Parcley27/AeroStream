@@ -214,8 +214,34 @@ function initializeMap() {
 
 }
 
+function mapRadius() {
+    if (!map) return 75;
+
+    const bounds = map.getBounds();
+    const center = map.getCenter();
+    
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
+    
+    const distanceToNE = center.distanceTo(northEast);
+    const distanceToSW = center.distanceTo(southWest);
+    const distanceToNW = center.distanceTo(L.latLng(northEast.lat, southWest.lng));
+    const distanceToSE = center.distanceTo(L.latLng(southWest.lat, northEast.lng));
+    
+    const maxDistanceMeters = Math.max(distanceToNE, distanceToSW, distanceToNW, distanceToSE);
+    
+    const radiusNM = maxDistanceMeters / 1852;
+    
+    // Add buffer to help with warping at higher lattitudes
+    const bufferedRadius = Math.min(radiusNM * 1.1, 250);
+    
+    // ADSB.lol prefers int radius values
+    return Math.round(bufferedRadius);
+
+}
+
 // ADSB.lol API integration
-async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = 75) {
+async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = mapRadius()) {
     try {
         console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
         
@@ -313,7 +339,7 @@ function updateAircraftDisplay(aircraftList) {
     // Clear selection if selected aircraft is no longer visable in data
     if (selectedHex && !aircraftMarkers.has(selectedHex)) {
         selectedAircraft = null;
-        hideAircraftPanel();
+        closeAircraftPanel();
 
         console.log('Selected aircraft is no longer visable, selection has been cleared');
     
