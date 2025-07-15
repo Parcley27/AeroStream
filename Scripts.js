@@ -7,6 +7,7 @@ let currentTileLayer;
 let usingNoLabels = false;
 
 let selectedAircraft;
+let aircraftMarkers = new Map(); // Store markers by aircraft hex
 
 let controlsVisible = false;
 
@@ -218,18 +219,18 @@ async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLon
     try {
         console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
         
-        const response = await fetch(
-            `http://24.85.222.126:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
+        // const response = await fetch(
+        //     `http://24.85.222.126:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
         
-        );
+        // );
 
         // Uncomment if hosting locally
-        /*
+        // /*
         const response = await fetch(
             `http://localhost:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
         
         );
-        */
+        // */
 
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -252,6 +253,9 @@ async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLon
 function updateAircraftDisplay(aircraftList) {
     // Clear existing markers
     aircraftLayer.clearLayers();
+    aircraftMarkers.clear();
+
+    const selectedHex = selectedAircraft ? selectedAircraft.hex : null;
 
     // Add marker for each aircraft
     aircraftList.forEach(aircraft => {
@@ -264,36 +268,56 @@ function updateAircraftDisplay(aircraftList) {
             // Feet
             const altitude = aircraft.alt_baro || aircraft.altitude || 'N/A';
             // Kts
-            const groundSpeed = aircraft.gs || 'Unknown'
+            const groundSpeed = aircraft.gs || 'Unknown';
 
             const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
 
+            const isSelected = selectedHex && selectedHex === aircraft.hex
             const marker = L.marker([latitude, longitude], {
-                icon: createAircraftIcon(aircraft)
+                icon: createAircraftIcon(aircraft, isSelected)
 
             });
             
             // Popup with basic info
-            marker.bindPopup(`
-                <strong>${callsign}</strong><br>
-                ICAO: ${icao}<br>
-                Alt: ${altitude}<br>
-                Lat: ${latitude.toFixed(4)}<br>
-                Lng: ${longitude.toFixed(4)}<br>
-                Spd: ${groundSpeed}<br>
-                Hdg: ${heading}
+            // marker.bindPopup(`
+            //     <strong>${callsign}</strong><br>
+            //     ICAO: ${icao}<br>
+            //     Alt: ${altitude}<br>
+            //     Lat: ${latitude.toFixed(4)}<br>
+            //     Lng: ${longitude.toFixed(4)}<br>
+            //     Spd: ${groundSpeed}<br>
+            //     Hdg: ${heading}
 
-            `);
+            // `);
 
             marker.aircraftData = aircraft
 
-            marker.on('click', () => selectAircraft(aircraft))
+            marker.on('click', () => selectAircraft(marker.aircraftData))
+
+            // Restore selection if selected in previous data
+            if (isSelected) {
+                selectedAircraft = aircraft;
+                updateAircraftPanel(aircraft);
+
+                console.log('Reselected aircraft and refreshed panel')
+
+            }
             
             // Add to aircraft layer
             marker.addTo(aircraftLayer);
+            aircraftMarkers.set(aircraft.hex, marker);
             
         }
     });
+
+    // Clear selection if selected aircraft is no longer visable in data
+    if (selectedHex && !aircraftMarkers.has(selectedHex)) {
+        selectedAircraft = null;
+        hideAircraftPanel();
+
+        console.log('Selected aircraft is no longer visable, selection has been cleared');
+    
+    }
 
     console.log('Displayed', aircraftLayer.getLayers().length, 'aircraft on the map');
 
@@ -303,7 +327,7 @@ function createAircraftIcon(aircraft, isSelected = false) {
     //if (selectedAircraft.hex == aircraft.hex) { isSelected = true };
 
     const isDarkMode = document.body.classList.contains('dark-mode');
-    const iconColour = isSelected ? 'var(--general-alert)' : isDarkMode ? 'var(--general-accent)' : 'var(--general-accent)';
+    const iconColour = isSelected ? 'var(--general-accent)' : isDarkMode ? 'var(--dark-primary)' : 'var(--light-primary)';
 
     const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
     const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
@@ -336,19 +360,70 @@ function createAircraftIcon(aircraft, isSelected = false) {
 }
 
 function selectAircraft(aircraft) {
-    // Clear previous
-    //if (selectedAircraft.hex != aircraft.hex) {
-        createAircraftIcon(selectedAircraft);
+    // Guard clause to handle undefined aircraft
+    if (!aircraft) {
+        console.warn('selectAircraft called with undefined aircraft');
+        return;
 
-        console.log('Deselected aircraft:', aircraft.flight?.trim() || aircraft.r || 'N/A');
+    }
 
-    //}
+    // If there was a previously selected aircraft, update its icon
+    if (selectedAircraft && selectedAircraft.hex) {
+        const previousMarker = aircraftMarkers.get(selectedAircraft.hex);
 
+        if (previousMarker) {
+            previousMarker.setIcon(createAircraftIcon(selectedAircraft, false));
+
+        }
+
+        console.log('Deselected aircraft:', selectedAircraft.flight?.trim() || selectedAircraft.r || 'N/A');
+
+    }
+
+    // Set new selected aircraft
     selectedAircraft = aircraft;
 
-    createAircraftIcon(selectedAircraft, true);
+    // Update the new selected aircraft's icon
+    const currentMarker = aircraftMarkers.get(aircraft.hex);
+    
+    if (currentMarker) {
+        currentMarker.setIcon(createAircraftIcon(aircraft, true));
+
+    }
+
+    showAircraftPanel(aircraft);
 
     console.log('Selected aircraft:', aircraft.flight?.trim() || aircraft.r || 'N/A');
+
+}
+
+function showAircraftPanel(aircraft) {
+    document.getElementById('aircraft-info-panel').style.display = 'block';
+
+    updateAircraftPanel(aircraft);
+
+}
+
+function closeAircraftPanel() {
+    document.getElementById('aircraft-info-panel').style.display = 'none';
+
+    if (selectedAircraft && selectedAircraft.hex) {
+        const marker = aircraftMarkers.get(selectedAircraft.hex);
+
+        if (marker) {
+            marker.setIcon(createAircraftIcon(selectedAircraft, false));
+
+        }
+    }
+
+    selectedAircraft = null;
+
+}
+
+function updateAircraftPanel(aircraft) {
+    const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
+
+    document.getElementById('info-callsign').textContent = callsign;
 
 }
 

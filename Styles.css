@@ -1,6 +1,7 @@
 /* Page colours */
 :root {
     --general-accent: #6ea3ee;
+    --general-primary: #6ea3ee;
     --general-secondary: #253a5b;
     --general-tertiary: #cbdbf6;
 
@@ -28,8 +29,8 @@
     --light-text: #253a5b;
     --light-border: #253a5b;
 
-    --light-primary: #6ea3ee;
-    --light-secondary: #223f6d;
+    --light-primary: #223f6d;
+    --light-secondary: #6ea3ee;
     --light-tertiary: #cbdbf6;
     --light-accent: #6ea3ee;
 
@@ -203,8 +204,8 @@ body.light-mode {
 
 }
 
-/* Aircraft panel */
-#aircraft-panel {
+/* Aircraft info panel */
+#aircraft-info-panel {
     position: absolute;
     top: 20px;
     left: 20px;
@@ -221,14 +222,14 @@ body.light-mode {
     line-height: 1.4;
 
 }
-.light-mode #aircraft-panel {
+.light-mode #aircraft-info-panel {
     background: var(--light-popup);
     color: var(--light-text);
     border-color: var(--light-border);
 
 }
 
-#aircraft-panel .panel-header {
+#aircraft-info-panel .panel-header {
     border-bottom: 1px solid var(--dark-border);
     padding-bottom: 10px;
     margin-bottom: 15px;
@@ -237,12 +238,12 @@ body.light-mode {
     align-items: center;
 
 }
-.light-mode #aircraft-panel .panel-header {
+.light-mode #aircraft-info-panel .panel-header {
     border-color: var(--light-border);
 
 }
 
-#aircraft-panel .close-button {
+#aircraft-info-panel .close-button {
     background: none;
     border: 1px solid var(--dark-border);
     color: var(--dark-text);
@@ -253,36 +254,36 @@ body.light-mode {
     transition: all 0.3s;
 
 }
-.light-mpde #aircraft-panel .close-button {
+.light-mpde #aircraft-info-panel .close-button {
     border: 1px solid var(--light-border);
 
 }
 
-#aircraft-panel .close-button:hover {
+#aircraft-info-panel .close-button:hover {
     background: var(--dark-primary);
     color: var(--dark-background);
 
 }
-.light-mode #aircraft-panel .close-button:hover {
+.light-mode #aircraft-info-panel .close-button:hover {
     background: var(--light-primary);
     color: var(--light-background);
 
 }
 
-#aircraft-panel .info-row {
+#aircraft-info-panel .info-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
 
 }
 
-#aircraft-panel .info-label {
+#aircraft-info-panel .info-label {
     font-weight: bold;
     opacity: 0.8;
 
 }
 
-#aircraft-panel .info-value {
+#aircraft-info-panel .info-value {
     text-align: right;
 
 }
