@@ -243,7 +243,7 @@ function mapRadius() {
 // ADSB.lol API integration
 async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = mapRadius()) {
     try {
-        console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
+        //console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
         
         // const response = await fetch(
         //     `http://24.85.222.126:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
@@ -265,7 +265,7 @@ async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLon
 
         const data = await response.json();
         console.log('Recieved aircraft data:', data.ac?.length || 0, 'aircraft were found within search radius');
-        console.log('Raw API response:', data);
+        //console.log('Raw API response:', data);
         
         // Display aircraft positions
         updateAircraftDisplay(data.ac || []);
@@ -345,7 +345,7 @@ function updateAircraftDisplay(aircraftList) {
     
     }
 
-    console.log('Displayed', aircraftLayer.getLayers().length, 'aircraft on the map');
+    //console.log('Displayed', aircraftLayer.getLayers().length, 'aircraft on the map');
 
 }
 
