@@ -1,0 +1,366 @@
+/* Page colours */
+:root {
+    --general-accent: #6ea3ee;
+    --general-secondary: #253a5b;
+    --general-tertiary: #cbdbf6;
+
+    --general-alert: #ffff00;
+    --general-error: #ff0000;
+
+    /* Dark mode colours */
+    --dark-background: #000000;
+    --dark-popup: rgba(0, 0, 0, 0.8);
+    --dark-popup-solid: rgba(0, 0, 0, 0.9);
+
+    --dark-text: #6ea3ee;
+    --dark-border: #6ea3ee;
+
+    --dark-primary: #cbdbf6;
+    --dark-secondary: #6ea3ee;;
+    --dark-tertiary: #223f6d;
+    --dark-accent: #6ea3ee;
+
+    /* Light mode */
+    --light-background: #ffffff;
+    --light-popup: rgba(255, 255, 255, 0.8);
+    --light-popup-solid: rgba(255, 255, 255, 0.9);
+
+    --light-text: #253a5b;
+    --light-border: #253a5b;
+
+    --light-primary: #6ea3ee;
+    --light-secondary: #223f6d;
+    --light-tertiary: #cbdbf6;
+    --light-accent: #6ea3ee;
+
+}
+
+/* Element styling */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New';
+    transition: all 0.3s ease;
+
+}
+
+/* Dark (default)/light mode */
+body.dark-mode {
+    background-color: var(--dark-background);
+    color: var(--dark-text);
+
+}
+
+body.light-mode {
+    background-color: var(--light-background);
+    color: var(--light-text);
+
+}
+
+#map {
+    width: 100vw;
+    height: 100vh;
+
+}
+.hide-cursor {
+    /* Cursor visibility */
+    cursor: none !important;
+
+}
+.hide-cursor * {
+    cursor: none !important;
+
+}
+.leaflet-tile-pane {
+    /* Grayscale filter for map */
+    filter: grayscale(100%) contrast(1.2) invert(1);
+
+}
+.light-mode .leaflet-tile-pane {
+    filter: grayscale(100%) contrast(1.2);
+
+}
+
+/* Loading screen */
+#loading-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--dark-popup-solid);
+    color: var(--dark-text);
+    padding: 30px;
+    border-radius: 5px;
+    border: 1px solid var(--dark-border);
+    z-index: 2000;
+    text-align: center;
+    font-size: 16px;
+
+}
+.light-mode #loading-screen {
+    background: var(--light-popup-solid);
+    color: var(--light-text);
+    border: 1px solid var(--light-border);
+
+}
+
+/* Manual coordinate entry */
+#coordinate-prompt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--dark-popup-solid);
+    color: var(--dark-text);
+    padding: 30px;
+    border-radius: 5px;
+    border: 1px solid var(--dark-border);;
+    z-index: 2000;
+    display: none;
+
+}
+.light-mode #coordinate-prompt {
+    background: var(--light-popup-solid);
+    color: var(--light-text);
+    border: 1px solid var(--light-border);
+
+}
+
+#coordinate-prompt h3 {
+    margin-top: 0;
+    color: var(--dark-text);
+
+}
+.light-mode #coordinate-prompt h3 {
+    color: var(--light-text);
+
+}
+
+#coordinate-prompt input {
+    background: var(--dark-background);
+    color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+    padding: 8px;
+    margin: 5px;
+    font-family: 'Courier New';
+    width: 150px;
+
+}
+.light-mode #coordinate-prompt input {
+    background: var(--light-background);
+    color: var(--light-text);
+    border: 1px solid var(--light-border);
+
+}
+
+#coordinate-prompt button {
+    background: var(--dark-tertiary);
+    color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+    padding: 10px 20px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-family: 'Courier New';
+    display: block;
+    width: 100%;
+
+}
+.light-mode #coordinate-prompt button {
+    background: var(--light-tertiary);
+    color: var(--light-text);
+    border: 1px solid var(--light-border);
+
+}
+
+#coordinate-prompt button:hover {
+    background: var(--dark-text);
+    color: var(--dark-tertiary);
+
+}
+.light-mode #coordinate-prompt button:hover {
+    background: var(--light-accent);
+    color: var(--light-text);
+
+}
+.location-button {
+    background: var(--dark-background) !important;
+    margin-bottom: 5px !important;
+
+}
+.light-mode .location-button {
+    background: var(--light-background) !important;
+    color: var(--light-text);
+
+}
+.location-button:hover {
+    background: var(--dark-text) !important;
+    color: var(--dark-tertiary) !important;
+
+}
+.light-mode .location-button:hover {
+    background: var(--light-accent) !important;
+    color: var(--light-text) !important;
+
+}
+
+/* Aircraft panel */
+#aircraft-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 280px;
+    background: var(--dark-popup);
+    color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    display: none;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    line-height: 1.4;
+
+}
+.light-mode #aircraft-panel {
+    background: var(--light-popup);
+    color: var(--light-text);
+    border-color: var(--light-border);
+
+}
+
+#aircraft-panel .panel-header {
+    border-bottom: 1px solid var(--dark-border);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.light-mode #aircraft-panel .panel-header {
+    border-color: var(--light-border);
+
+}
+
+#aircraft-panel .close-button {
+    background: none;
+    border: 1px solid var(--dark-border);
+    color: var(--dark-text);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    transition: all 0.3s;
+
+}
+.light-mpde #aircraft-panel .close-button {
+    border: 1px solid var(--light-border);
+
+}
+
+#aircraft-panel .close-button:hover {
+    background: var(--dark-primary);
+    color: var(--dark-background);
+
+}
+.light-mode #aircraft-panel .close-button:hover {
+    background: var(--light-primary);
+    color: var(--light-background);
+
+}
+
+#aircraft-panel .info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+
+}
+
+#aircraft-panel .info-label {
+    font-weight: bold;
+    opacity: 0.8;
+
+}
+
+#aircraft-panel .info-value {
+    text-align: right;
+
+}
+
+/* Highlighted aircraft*/
+.aircraft-selected {
+    color: #ffff00 !important;
+
+}
+
+/* Controls */
+#controls-display {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--dark-background);
+    color: var(--dark-text);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--dark-border);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    font-family: 'Courier New';
+
+}
+.light-mode #controls-display {
+    background: var(--light-background);
+    color: var(--light-text);
+    border: 1px solid var(--light-border);
+
+}
+.zoom-buttons {
+    /* Horizontal zoom button row */
+    display: flex;
+    gap: 10px;
+
+}
+
+/* Buttons style */
+#controls-display button {
+    padding: 8px 12px;
+    background: var(--dark-background);
+    color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 80px;
+    font-family: 'Courier New';
+
+}
+.light-mode #controls-display button {
+    background: var(--light-background);
+    color: var(--light-text);
+    border: 1px solid var(--light-border);
+
+}
+
+/* Button hover effect */
+#controls-display button:hover {
+    background: var(--dark-tertiary);
+    color: var(--dark-accent);
+
+}
+.light-mode #controls-display button:hover {
+    background: var(--light-accent);
+    color: var(--light-accent-hover);
+
+}
+
+/* Span (text) styling */
+#controls-display span {
+    font-size: 12px;
+    padding: 4px 0;
+
+}
+
