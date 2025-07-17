@@ -288,12 +288,6 @@ body.light-mode {
 
 }
 
-/* Highlighted aircraft*/
-.aircraft-selected {
-    color: #ffff00 !important;
-
-}
-
 /* Controls */
 #controls-display {
     position: absolute;
