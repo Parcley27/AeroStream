@@ -198,6 +198,8 @@ function initializeMap() {
 
     });
 
+    map.on('click', handleMapClick);
+
     // Create layer for aircraft markers
     aircraftLayer = L.layerGroup().addTo(map);
 
@@ -238,6 +240,15 @@ function mapRadius() {
     // ADSB.lol prefers int radius values
     return Math.round(bufferedRadius);
 
+}
+
+function handleMapClick(e) {
+    if (selectedAircraft) {
+        closeAircraftPanel();
+
+        console.log('Map clicked, deselected current aircraft')
+
+    }
 }
 
 // ADSB.lol API integration
@@ -388,6 +399,16 @@ function selectAircraft(aircraft) {
     // Guard clause to handle undefined aircraft
     if (!aircraft) {
         console.warn('selectAircraft called with undefined aircraft');
+
+        return;
+
+    }
+
+    if (selectedAircraft && selectedAircraft.hex === aircraft.hex) {
+        deselectAircraft();
+
+        console.log('Reclick; Deselected aircraft')
+
         return;
 
     }
@@ -416,13 +437,21 @@ function selectAircraft(aircraft) {
 
     }
 
-    showAircraftPanel(aircraft);
+    openAircraftPanel(aircraft);
 
     console.log('Selected aircraft:', aircraft.flight?.trim() || aircraft.r || 'N/A');
 
 }
 
-function showAircraftPanel(aircraft) {
+function deselectAircraft() {
+
+    closeAircraftPanel();
+
+    selectedAircraft = null;
+    
+}
+
+function openAircraftPanel(aircraft) {
     document.getElementById('aircraft-info-panel').style.display = 'block';
 
     updateAircraftPanel(aircraft);
@@ -440,9 +469,6 @@ function closeAircraftPanel() {
 
         }
     }
-
-    selectedAircraft = null;
-
 }
 
 function updateAircraftPanel(aircraft) {
@@ -545,7 +571,7 @@ function cycleView() {
             
         case 1: // Show attributions
             attributions.style.display = 'block';
-            
+
             console.log('Attributions shown');
 
             break;
