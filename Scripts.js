@@ -356,7 +356,7 @@ function createAircraftIcon(aircraft, isSelected = false) {
 
     const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
     const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
-    const speed = aircraft.gs || 0;
+    const speed = aircraft.gs || aircraft.speed || 0;
 
     // Scale vector length based on speed
     const minLength = 8;
