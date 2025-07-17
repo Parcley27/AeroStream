@@ -303,6 +303,7 @@ body.light-mode {
     flex-direction: column;
     gap: 10px;
     font-family: 'Courier New';
+    text-align: right;
 
 }
 .light-mode #controls-display {
@@ -356,6 +357,51 @@ body.light-mode {
 #controls-display span {
     font-size: 12px;
     padding: 4px 0;
+
+}
+
+/* Attribution panel */
+#attribution-panel {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: var(--dark-popup);
+    color: var(--dark-text);
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid var(--dark-border);
+    z-index: 1000;
+    display: none;
+    font-family: 'Courier New';
+    font-size: 12px;
+    text-align: right;
+    line-height: 1.4;
+    min-width: 200px;
+
+}
+
+.light-mode #attribution-panel {
+    background: var(--light-popup);
+    color: var(--light-text);
+    border: 1px solid var(--light-border);
+
+}
+
+#attribution-panel a {
+    color: var(--dark-accent);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+
+}
+
+.light-mode #attribution-panel a {
+    color: var(--light-accent);
+
+}
+
+#attribution-panel a:hover {
+    opacity: 0.7;
+    text-decoration: underline;
 
 }
 

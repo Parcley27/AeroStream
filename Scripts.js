@@ -9,7 +9,7 @@ let usingNoLabels = false;
 let selectedAircraft;
 let aircraftMarkers = new Map(); // Store markers by aircraft hex
 
-let controlsVisible = false;
+let viewState = 0;
 
 let cursorVisible = true;
 
@@ -210,7 +210,7 @@ function initializeMap() {
     console.log('Map created successfully');
 
     // Show map controls
-    toggleControls()
+    cycleView()
 
 }
 
@@ -530,24 +530,37 @@ function resetMap() {
 
 }
 
-// Extra controls
-function toggleControls() {
+// Extra settings
+function cycleView() {
     const controls = document.getElementById('controls-display');
+    const attributions = document.getElementById('attribution-panel');
     
-    if (!controlsVisible) {
-        controls.style.display = 'flex';
+    switch(viewState % 3) {
+        case 0: // Show controls
+            controls.style.display = 'flex';
 
-        console.log('Controls shown');
+            console.log('Controls shown');
 
-    } else {
-        controls.style.display = 'none';
-        
-        console.log('Controls hidden');
+            break;
+            
+        case 1: // Show attributions
+            attributions.style.display = 'block';
+            
+            console.log('Attributions shown');
+
+            break;
+            
+        case 2: // Hide both
+            controls.style.display = 'none';
+            attributions.style.display = 'none';
+
+            console.log('All panels hidden');
+
+            break;
 
     }
 
-    controlsVisible = !controlsVisible;
-
+    viewState += 1;
     
 }
 
@@ -664,8 +677,8 @@ document.addEventListener('keydown', function(event) {
         
         case keybinds.changeView:
         case keybinds.changeView.toUpperCase():
-            console.log('Toggling controls...')
-            toggleControls();
+            console.log('Cycling controls...')
+            cycleView();
             
             break;
         
