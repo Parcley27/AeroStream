@@ -293,7 +293,7 @@ body.light-mode {
     position: absolute;
     top: 20px;
     right: 20px;
-    background: var(--dark-background);
+    background: var(--dark-popup);
     color: var(--dark-text);
     padding: 10px;
     border-radius: 5px;
@@ -306,7 +306,7 @@ body.light-mode {
 
 }
 .light-mode #controls-display {
-    background: var(--light-background);
+    background: var(--light-popup);
     color: var(--light-text);
     border: 1px solid var(--light-border);
 
