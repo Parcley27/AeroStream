@@ -446,9 +446,46 @@ function closeAircraftPanel() {
 }
 
 function updateAircraftPanel(aircraft) {
-    const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
+    const callsign = aircraft.flight?.trim() || aircraft.r || 'Unknown';
+    const icaoID = aircraft.hex || 'Unknown';
+    const altitude = aircraft.alt_baro || aircraft.altitude || 'Unknown';
+    const speed = aircraft.gs || aircraft.speed || 'Unknown';
+    const track = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 'Unknown';
+    const squawk = aircraft.squawk || 'Unknown';
+    const type = aircraft.t || aircraft.type || 'Unknown';
+    const latitude = aircraft.lat ? aircraft.lat.toFixed(4) : 'Unknown';
+    const longitude = aircraft.lon ? aircraft.lon.toFixed(4) : 'Unknown';
+    const latestUpdate = aircraft.seen || 'Unknown';
+
 
     document.getElementById('info-callsign').textContent = callsign;
+    document.getElementById('info-icaoID').textContent = icaoID;
+
+    document.getElementById('info-altitude').textContent = 
+        altitude !== 'Unknown' && altitude !== 'ground' 
+        ? altitude + ' ft' 
+        : altitude.charAt(0).toUpperCase() + altitude.slice(1);
+    document.getElementById('info-speed').textContent = 
+        speed !== 'Unknown'
+        ? speed + ' kts'
+        : speed;
+    document.getElementById('info-track').textContent = 
+    track !== 'Unknown'
+        ? track + '°'
+        : track;
+
+    document.getElementById('info-squawk').textContent = squawk;
+    document.getElementById('info-type').textContent = type;
+
+    document.getElementById('info-position').textContent = `${latitude}, ${longitude}`;
+    document.getElementById('info-latestUpdate').textContent =
+        latestUpdate === 'Unknown'
+        ? latestUpdate
+        : latestUpdate < 5
+            ? '< 5 seconds ago'
+            : Math.floor(latestUpdate) + ' seconds ago';
+
+
 
 }
 
