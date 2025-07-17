@@ -245,18 +245,17 @@ async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLon
     try {
         //console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
         
+        // Public Hosting
         // const response = await fetch(
         //     `http://24.85.222.126:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
         
         // );
 
-        // Uncomment if hosting locally
-        // /*
+        // Local hosting
         const response = await fetch(
             `http://localhost:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
         
         );
-        // */
 
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
