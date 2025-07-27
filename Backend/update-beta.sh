@@ -3,7 +3,7 @@
 set -e
 
 echo "Updating Beta Site"
-echo "===================="
+echo "=================="
 
 BETA_DIR="/var/www/beta.airtraffic.online"
 
