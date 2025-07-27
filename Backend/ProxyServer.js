@@ -13,10 +13,11 @@ app.get('/aircraft', async (req, res) => {
     if (!lat || !lon || !dist) {
         console.warn('Missing query parameters:', req.query);
         return res.status(400).json({ error: 'Missing required query parameters' });
+        
     }
 
     const url = `https://api.adsb.lol/v2/lat/${lat}/lon/${lon}/dist/${dist}`;
-    
+
     console.log('Fetching:', url);
 
     try {
