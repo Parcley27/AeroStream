@@ -3,3 +3,7 @@
 playground.html
 playground.js
 playground.css
+
+node_modules/
+package-lock.json
+package.json
