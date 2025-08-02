@@ -1,3 +1,5 @@
+let publicHost = true; // Change this line if hosting your own proxy server
+
 let map;
 let userLatitude, userLongitude;
 
@@ -254,22 +256,32 @@ function handleMapClick(e) {
 // ADSB.lol API integration
 async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = mapRadius()) {
     try {
-        //console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
+        console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
         
-        // API hosting
-        const response = await fetch(
-            `https://api.airtraffic.online/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}`
-        
-        );
+        let response;
+
+        // API Hosting
+        if (publicHost) {
+            response = await fetch(
+                `https://api.airtraffic.online/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}&caller=airtraffic.online`
+
+            );
+
+        } else {
+            response = await fetch(
+                `http://localhost:4027/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}&caller=localhost`
+
+            );
+        }
 
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        
+
         }
 
         const data = await response.json();
-        console.log('Recieved aircraft data:', data.ac?.length || 0, 'aircraft were found within search radius');
-        //console.log('Raw API response:', data);
+        // console.log('Recieved aircraft data:', data.ac?.length || 0, 'aircraft were found within search radius');
+        console.log(`API response for ${data.ac?.length} aircraft:`, data);
         
         // Display aircraft positions
         updateAircraftDisplay(data.ac || []);
@@ -349,7 +361,7 @@ function updateAircraftDisplay(aircraftList) {
     
     }
 
-    //console.log('Displayed', aircraftLayer.getLayers().length, 'aircraft on the map');
+    // console.log('Displayed', aircraftLayer.getLayers().length, 'aircraft on the map');
 
 }
 

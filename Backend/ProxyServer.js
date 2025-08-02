@@ -7,18 +7,26 @@ const port = 4027
 const app = express();
 app.use(cors());
 
-app.get('/aircraft', async (req, res) => {
-    const { lat, lon, dist } = req.query;
+function getTime() {
+    const now = new Date();
+    const currentTime = now.toLocaleString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-    if (!lat || !lon || !dist) {
+    return currentTime
+
+}
+
+app.get('/aircraft', async (req, res) => {
+    const { lat, lon, dist, caller } = req.query;
+
+    if (!lat || !lon || !dist || !caller) {
         console.warn('Missing query parameters:', req.query);
-        return res.status(400).json({ error: 'Missing required query parameters' });
+        return res.status(400).json({ error: 'Missing required query parameters, check that call matches format: lat=${lat}&lon=${lon}&dist=${dist}&caller="callerID' });
         
     }
 
     const url = `https://api.adsb.lol/v2/lat/${lat}/lon/${lon}/dist/${dist}`;
 
-    console.log('Fetching:', url);
+    // console.log('Fetching:', url);
 
     try {
         const response = await fetch(url);
@@ -30,7 +38,8 @@ app.get('/aircraft', async (req, res) => {
         }
 
         const data = await response.json();
-        console.log('Successfully fetched data from ADSB.lol');
+
+        console.log(`Call from ${caller} at ${getTime()}; Found ${data.ac?.length} aircraft within ${dist} nm of ${Math.round(lat * 100) / 100}, ${Math.round(lon * 100) / 100}`);
         res.json(data);
 
     } catch (err) {

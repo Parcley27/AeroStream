@@ -36,7 +36,7 @@ Many thanks to [ADSB.lol](https://adsb.lol/) for live ATC data, as well as [Open
 
 ## Local Setup Guide
 
-### Prerequisites
+### Prerequisites (if hosting proxy)
 
 1.  Check your Node.js installation by running `node -v` and `npm -v` in your system's terminal.
     -   If it's not installed, you can download Node.js from [https://nodejs.org](https://nodejs.org/)
@@ -44,9 +44,14 @@ Many thanks to [ADSB.lol](https://adsb.lol/) for live ATC data, as well as [Open
 ### Quick Start
 
 1.  Clone, fork, or otherwise download the content of the AeroStream repository onto your machine
-2.  Open a terminal window to the root folder of the repository.
+   
+2.  If you want to host your own proxy server (to see logs or customize api behaviour), follow the below instructions. Otherwise, just open the AerostreamRadar.html file like normal.
+   
+3.  Change line #1 of `/Frontend/Scripts.js` to `let publicHost = false;` to let the site know you want to host the API proxy yourself
+
+4.  Open a terminal window to the root folder of the repository.
     
-3.  Run the following commands to start your own local server:
+5.  Run the following commands to start your own local server:
     
     ```bash
     # Navigate to the backend directory
@@ -59,14 +64,17 @@ Many thanks to [ADSB.lol](https://adsb.lol/) for live ATC data, as well as [Open
     node ProxyServer.js
     ```
     
-4.  The proxy server will start on port 4027. You should see:
+6.  The proxy server will start on port 4027. You should see:
     
     ```
     Proxy server running at http://localhost:4027
     
     ```
     
-5.  Open a new terminal window and start a local web server for the frontend:
+7.  Note that you can also just open the AerostreamRadar.html file in your browser (instead of starting the web server) like any other HTML page, though most browsers will auto disable location access as part of their safety measures.
+   
+
+8.  To host the server on your local network, open a new terminal window and start a local web server for the frontend:
     
     ```bash
     # Navigate to the frontend directory
@@ -88,11 +96,9 @@ Many thanks to [ADSB.lol](https://adsb.lol/) for live ATC data, as well as [Open
     
     ```
     
-6.  Open your web browser and navigate to `http://localhost:3000/AerostreamRadar.html`
-
-7. Note that you can also just open the AerostreamRadar.html file in your browser (instead of starting the web server) like any other HTML page, though most browsers will auto disable location access as part of their safety measures
+9.  Open your web browser and navigate to `http://localhost:3000/AerostreamRadar.html`
     
-8.  Allow location access when prompted, or manually enter coordinates to start viewing aircraft in your area.
+10. Allow location access when prompted, or manually enter coordinates to start viewing aircraft in your area.
 
 ## API Documentation
 
