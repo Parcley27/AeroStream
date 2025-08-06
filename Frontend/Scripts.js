@@ -17,7 +17,7 @@ let cursorVisible = true;
 
 let updateFrequency = 5 * 1000; // 5 seconds (ms)
 
-let timeoutLength = 10 * 1000; // 1 hour
+let timeoutLength = 60 * 60 * 1000; // 1 hour
 
 const keybinds = {
     zoomIn: "+",
@@ -41,8 +41,8 @@ const keybinds = {
 }
 
 class SessionTimeout {
-    constructor(timeoutMinutes = 60) {
-        this.timeoutDuration = timeoutMinutes * 60 * 1000; // Convert to ms
+    constructor(length = 60 * 60 * 1000) {
+        this.timeoutDuration = length;
         this.timeoutId = null;
         this.isTimedOut = false;
 
@@ -94,7 +94,7 @@ class SessionTimeout {
     }
 }
 
-const sessionTimeout = new SessionTimeout(60);
+const sessionTimeout = new SessionTimeout(timeoutLength);
 
 document.addEventListener('click', function(event) {
     sessionTimeout.resetTimer();
