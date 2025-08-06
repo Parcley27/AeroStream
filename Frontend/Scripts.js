@@ -15,6 +15,10 @@ let viewState = 0;
 
 let cursorVisible = true;
 
+let updateFrequency = 5 * 1000; // 5 seconds (ms)
+
+let timeoutLength = 10 * 1000; // 1 hour
+
 const keybinds = {
     zoomIn: "+",
     zoomInSecondary: "=",
@@ -30,13 +34,88 @@ const keybinds = {
     toggleCursor: "h",
     changeView: "v",
 
+    disableTimeout: "t",
+
     debug: "d"
 
 }
 
+class SessionTimeout {
+    constructor(timeoutMinutes = 60) {
+        this.timeoutDuration = timeoutMinutes * 60 * 1000; // Convert to ms
+        this.timeoutId = null;
+        this.isTimedOut = false;
+
+    }
+
+    resetTimer() {
+        if (this.isTimedOut) return;
+        
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+
+        }
+        
+        this.timeoutId = setTimeout(() => {
+            this.timeoutSession();
+        }, this.timeoutDuration);
+        
+        console.log('Session timer reset');
+
+    }
+
+    timeoutSession() {
+        this.isTimedOut = true;
+
+        if (updateInterval) {
+            clearInterval(updateInterval);
+
+        }
+
+        const timeoutDialog = document.getElementById('timeout-dialog');
+        const fullscreenCover = document.getElementById('fullscreen-cover');
+
+        timeoutDialog.style.display = 'block';
+        fullscreenCover.style.display = 'block';
+
+        console.log("Session timed out due to inactivity")
+
+    }
+
+    stopTimeout() {
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+            this.timeoutId = null;
+
+        }
+
+        console.log('Session timeout stopped');
+
+    }
+}
+
+const sessionTimeout = new SessionTimeout(60);
+
+document.addEventListener('click', function(event) {
+    sessionTimeout.resetTimer();
+
+});
+
+document.addEventListener('keypress', function(event) {
+    if (event.key === keybinds.disableTimeout || event.key === keybinds.disableTimeout.toUpperCase()) {
+        return;
+
+    }
+    
+    sessionTimeout.resetTimer();
+
+});
+
 // Start getting location on page load
 window.onload = function() {
     requestLocation();
+
+    sessionTimeout.resetTimer();
 
 };
 
@@ -209,7 +288,7 @@ function initializeMap() {
     fetchAircraftData(userLatitude, userLongitude);
 
     // Start update loop (10s)
-    updateInterval = setInterval(fetchAircraftData, 5000);
+    updateInterval = setInterval(fetchAircraftData, updateFrequency);
 
     console.log('Map created successfully');
 
@@ -256,7 +335,7 @@ function handleMapClick(e) {
 // ADSB.lol API integration
 async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = mapRadius()) {
     try {
-        console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
+        // console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
         
         let response;
 
@@ -714,6 +793,13 @@ document.addEventListener('keydown', function(event) {
             
             break;
         
+        case keybinds.disableTimeout:
+        case keybinds.disableTimeout.toUpperCase():
+            console.log('Stopping session timeout...')
+            sessionTimeout.stopTimeout();
+
+            break;
+        
         case keybinds.debug:
         case keybinds.debug.toUpperCase():
             console.log('Running debug');
@@ -740,4 +826,3 @@ window.addEventListener('beforeunload', () => {
 
     }
 });
-

@@ -405,3 +405,44 @@ body.light-mode {
 
 }
 
+#timeout-dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--dark-popup-solid);
+    color: var(--dark-text);
+    padding: 30px;
+    border-radius: 5px;
+    border: 1px solid var(--dark-border);
+    z-index: 2000;
+    text-align: center;
+    font-size: 16px;
+    font-family: 'Courier New', Courier, monospace;
+    display: none;
+    z-index: 10001;
+
+}
+.light-mode #timeout-dialog {
+    background: var(--light-popup-solid);
+    color: var(--light-text);
+    border: 1px solid var(--light-border);
+
+}
+
+#fullscreen-cover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--dark-popup-solid);
+    z-index: 10000;
+    display: none;
+
+}
+.light-mode #fullscreen-cover {
+    background-color: var(--light-popup-solid);
+
+}
+
