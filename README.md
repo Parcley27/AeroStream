@@ -183,7 +183,7 @@ AeroStream uses the ADSB.lol API through a proxy server to avoid CORS issues.
 
 "squawk": "1200",
 
-"t": "B738"
+"t": "B74S"
 
 }
 
@@ -217,7 +217,10 @@ If you encounter any issues or have questions, please:
 
 ## Acknowledgments
 
--  **[ADSB.lol](https://adsb.lol/)** - Providing free access to live ADS-B aircraft data (Truely the goats)
+-  **[ADSB.lol](https://adsb.lol/)** - Providing free and limitless access to live ADS-B aircraft data (Truely the goats)
 -  **[Leaflet](https://leafletjs.com/)** - Interactive maps and easy implementation of custom tiles
 -  **[OpenStreetMap](https://www.openstreetmap.org/)** - Open source mapping data and labled map tiles
 -  **[Carto](https://carto.com/basemaps)** - Clean basemap tiles
+-  **[nginx](https://www.f5.com/go/product/welcome-to-nginx)** -- Server hosting software
+-  **[Node.js](https://nodejs.org/)** - JavaScript runtime for the proxy server software
+-  **[Let's Encrypt and the ISRG](https://letsencrypt.org/)** -- Free and auto-renewing SSL certificates
