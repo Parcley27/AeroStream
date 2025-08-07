@@ -420,12 +420,14 @@ async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLon
     try {
         // console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
         
+        let currentUrl = window.location.href;
+        
         let response;
 
         // API Hosting
         if (publicHost) {
             response = await fetch(
-                `https://api.airtraffic.online/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}&caller=airtraffic.online`
+                `https://api.airtraffic.online/aircraft?lat=${centerLatitude}&lon=${centerLongitude}&dist=${searchRadius}&caller=${currentUrl}`
 
             );
 
