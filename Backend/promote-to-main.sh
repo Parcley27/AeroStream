@@ -2,8 +2,8 @@
 
 set -e  # Exit on any error
 
-echo "Promoting beta site to main"
-echo "==========================="
+echo "Promoting Beta to Main"
+echo "======================"
 
 # Colors for output
 RED='\033[0;31m'
