@@ -2,6 +2,9 @@ let publicHost = true; // Change this line if hosting your own proxy server
 
 let map;
 let userLatitude, userLongitude;
+let defaultZoom = 9;
+
+let isProgrammedMove = false;
 
 let openStreetMapTileLayer;
 let noLabelTileLayer;
@@ -239,7 +242,7 @@ function initializeMap() {
     // Create a map centered on user location
     map = L.map('map', {
         center: [userLatitude, userLongitude],
-        zoom: 10,
+        zoom: defaultZoom,
         attributionControl: false,
         zoomControl: false
 
@@ -634,7 +637,7 @@ function centerMap() {
 
 function resetMap() {
     if (map && userLatitude && userLongitude) {
-        map.setView([userLatitude, userLongitude], 10)
+        map.setView([userLatitude, userLongitude], defaultZoom)
 
         console.log('Map reset');
 
