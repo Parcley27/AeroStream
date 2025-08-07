@@ -15,12 +15,14 @@ let selectedAircraft;
 let aircraftMarkers = new Map(); // Store markers by aircraft hex
 
 let viewState = 0;
-
 let cursorVisible = true;
 
-let updateFrequency = 5 * 1000; // 5 seconds (ms)
+let seconds = 1000;
 
-let timeoutLength = 60 * 60 * 1000; // 1 hour
+let updateFrequency = 5 * seconds; // 5 seconds (ms)
+let updateInterval;
+
+let timeoutLength = 60 * 60 * seconds; // 1 hour
 
 const keybinds = {
     zoomIn: "+",
@@ -44,7 +46,7 @@ const keybinds = {
 }
 
 class SessionTimeout {
-    constructor(length = 60 * 60 * 1000) {
+    constructor(length = 60 * 60 * seconds) {
         this.timeoutDuration = length;
         this.timeoutId = null;
         this.isTimedOut = false;
@@ -274,12 +276,40 @@ function initializeMap() {
     .addTo(map);
     
     // Refresh data on map move
-    map.on('moveend zoomend', function() {
-        console.log('Map moved or zoomed, updating aircraft data for new map zone');
+    map.on('moveend', function() {
+        console.log('Map moved');
+        // console.log(`Zoom: ${map.getZoom()}, Center: ${map.getCenter().lat.toFixed(4)}, ${map.getCenter().lng.toFixed(4)}`);
+
+        if (isProgrammedMove) {
+            console.log('Data refresh locked, skipping update');
+
+            return;
+
+        }
+
+        console.log('Updating aircraft data for new map zone')
 
         const center = map.getCenter();
         fetchAircraftData(center.lat, center.lng)
 
+    });
+
+    map.on('zoomend', function() {
+        console.log('Map zoomed');
+
+        if (isProgrammedMove) {
+            console.log('Data refresh locked, skipping update');
+
+            return;
+
+        }
+
+        console.log('Map zoomed, updating aircraft data and refresh frequency');
+        const center = map.getCenter();
+        fetchAircraftData(center.lat, center.lng);
+        
+        restartUpdateTimer();
+        
     });
 
     map.on('click', handleMapClick);
@@ -300,7 +330,7 @@ function initializeMap() {
 
 }
 
-function mapRadius() {
+function mapRadius() { // Nautical Miles
     if (!map) return 75;
 
     const bounds = map.getBounds();
@@ -326,6 +356,54 @@ function mapRadius() {
 
 }
 
+function calculateUpdateFrequency() {
+    if (!map) return 5 * seconds;
+    
+    const radius = mapRadius();
+    
+    if (radius > 200) {
+        return 7.5 * seconds;
+
+    } else if (radius > 100) {
+        return 5 * seconds;
+
+    } else if (radius > 50) {
+        return 3 * seconds;
+
+    } else if (radius > 25) {
+        return 1 * seconds;
+
+    } else if (radius > 10) {
+        return 0.5 * seconds;
+
+    } else {
+        return 0.2 * seconds;
+
+    }
+}
+
+function restartUpdateTimer(forced = false) {
+    const newFrequency = calculateUpdateFrequency();
+    
+    if (newFrequency !== updateFrequency || forced) {
+        updateFrequency = newFrequency;
+        
+        // Clear old interval
+        if (updateInterval) {
+            clearInterval(updateInterval);
+
+        }
+        
+        // Start new interval based on map size
+        updateInterval = setInterval(() => {
+            fetchAircraftData();
+        }, updateFrequency);
+        
+        console.log(`Updated data refresh frequency to ${updateFrequency / 1000} seconds`);
+
+    }
+}
+
 function handleMapClick(e) {
     if (selectedAircraft) {
         deselectAircraft();
@@ -337,6 +415,8 @@ function handleMapClick(e) {
 
 // ADSB.lol API integration
 async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = mapRadius()) {
+    isProgrammedMove = true;
+
     try {
         // console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
         
@@ -368,10 +448,18 @@ async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLon
         // Display aircraft positions
         updateAircraftDisplay(data.ac || []);
 
+        if (selectedAircraft) {
+            map.panTo([selectedAircraft.lat, selectedAircraft.lon]);
+
+        }
+
     } catch (error) {
         console.error('Error fetching aircraft data:', error);
 
     }
+
+    isProgrammedMove = false;
+
 }
 
 function updateAircraftDisplay(aircraftList) {
@@ -380,6 +468,7 @@ function updateAircraftDisplay(aircraftList) {
     aircraftMarkers.clear();
 
     const selectedHex = selectedAircraft ? selectedAircraft.hex : null;
+    let foundSelectedAircraft = false; // Track if we found the selected aircraft
 
     // Add marker for each aircraft
     aircraftList.forEach(aircraft => {
@@ -389,62 +478,39 @@ function updateAircraftDisplay(aircraftList) {
             const longitude = aircraft.lon;
             const callsign = aircraft.flight?.trim() || aircraft.r || 'Unknown';
             const icao = aircraft.hex || 'Unknown';
-            // Feet
             const altitude = aircraft.alt_baro || aircraft.altitude || 'N/A';
-            // Kts
             const groundSpeed = aircraft.gs || 'Unknown';
-
             const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
 
-            const isSelected = selectedHex && selectedHex === aircraft.hex
+            const isSelected = selectedHex && selectedHex === aircraft.hex;
+            
+            if (isSelected) {
+                foundSelectedAircraft = true;
+                // Update the stored aircraft data but don't retrigger selection
+                selectedAircraft = aircraft;
+                updateAircraftPanel(aircraft); // Just update the panel data
+                console.log('Updated selected aircraft data without retriggering selection');
+            }
+
             const marker = L.marker([latitude, longitude], {
                 icon: createAircraftIcon(aircraft, isSelected)
-
             });
-            
-            // Popup with basic info
-            // marker.bindPopup(`
-            //     <strong>${callsign}</strong><br>
-            //     ICAO: ${icao}<br>
-            //     Alt: ${altitude}<br>
-            //     Lat: ${latitude.toFixed(4)}<br>
-            //     Lng: ${longitude.toFixed(4)}<br>
-            //     Spd: ${groundSpeed}<br>
-            //     Hdg: ${heading}
 
-            // `);
-
-            marker.aircraftData = aircraft
-
-            marker.on('click', () => selectAircraft(marker.aircraftData))
-
-            // Restore selection if selected in previous data
-            if (isSelected) {
-                selectedAircraft = aircraft;
-                updateAircraftPanel(aircraft);
-
-                console.log('Reselected aircraft and refreshed panel')
-
-            }
+            marker.aircraftData = aircraft;
+            marker.on('click', () => selectAircraft(marker.aircraftData));
             
             // Add to aircraft layer
             marker.addTo(aircraftLayer);
             aircraftMarkers.set(aircraft.hex, marker);
-            
         }
     });
 
-    // Clear selection if selected aircraft is no longer visable in data
-    if (selectedHex && !aircraftMarkers.has(selectedHex)) {
+    // Clear selection if selected aircraft is no longer visible in data
+    if (selectedHex && !foundSelectedAircraft) {
         selectedAircraft = null;
         closeAircraftPanel();
-
-        console.log('Selected aircraft is no longer visable, selection has been cleared');
-    
+        console.log('Selected aircraft is no longer visible, selection has been cleared');
     }
-
-    // console.log('Displayed', aircraftLayer.getLayers().length, 'aircraft on the map');
-
 }
 
 function createAircraftIcon(aircraft, isSelected = false) {
@@ -813,7 +879,7 @@ document.addEventListener('keydown', function(event) {
                 console.log('Refresh timer stopped');
                 
             } else {
-                updateInterval = setInterval(fetchAircraftData, updateFrequency);
+                restartUpdateTimer(true);
                 console.log('Refresh timer started');
 
             }
