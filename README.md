@@ -155,7 +155,7 @@ AeroStream uses the ADSB.lol API through a proxy server to avoid CORS issues.
 -  `lat`: Latitude (decimal degrees)
 -  `lon`: Longitude (decimal degrees)
 -  `dist`: Distance radius in nautical miles
--  `caller`: Identifies call source for the proxy server's display. Can be anything
+-  `caller`: Identifies call source for the proxy server's display. Can be anything, but defaults to the page URL when not locally hosting
 
 ### Response Format
 
