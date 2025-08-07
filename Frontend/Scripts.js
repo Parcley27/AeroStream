@@ -809,7 +809,7 @@ document.addEventListener('keydown', function(event) {
                 console.log('Refresh timer stopped');
                 
             } else {
-                updateInterval = setInterval(fetchAircraftData, 5000);
+                updateInterval = setInterval(fetchAircraftData, updateFrequency);
                 console.log('Refresh timer started');
 
             }
