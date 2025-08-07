@@ -325,7 +325,7 @@ function mapRadius() {
 
 function handleMapClick(e) {
     if (selectedAircraft) {
-        closeAircraftPanel();
+        deselectAircraft();
 
         console.log('Map clicked, deselected current aircraft')
 
@@ -524,16 +524,17 @@ function selectAircraft(aircraft) {
 
     openAircraftPanel(aircraft);
 
+    map.panTo([aircraft.lat, aircraft.lon])
+
     console.log('Selected aircraft:', aircraft.flight?.trim() || aircraft.r || 'N/A');
 
 }
 
 function deselectAircraft() {
-
     closeAircraftPanel();
 
     selectedAircraft = null;
-    
+
 }
 
 function openAircraftPanel(aircraft) {
