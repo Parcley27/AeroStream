@@ -1,4 +1,4 @@
-let publicHost = true; // Change this line if hosting your own proxy server
+let publicHost = true; // Change this line to "false" if hosting your own proxy server
 
 let map;
 let userLatitude, userLongitude;
@@ -21,6 +21,9 @@ let seconds = 1000;
 
 let updateFrequency = 5 * seconds; // 5 seconds (ms)
 let updateInterval;
+
+let minimumUpdateFrequency = 250; // 0.25 seconds
+let lastUpdateTime; 
 
 let timeoutLength = 60 * 60 * seconds; // 1 hour
 
@@ -290,7 +293,11 @@ function initializeMap() {
         console.log('Updating aircraft data for new map zone')
 
         const center = map.getCenter();
-        fetchAircraftData(center.lat, center.lng)
+
+        if (isUpdateAllowed()) {
+            fetchAircraftData(center.lat, center.lng)
+
+        }
 
     });
 
@@ -305,8 +312,13 @@ function initializeMap() {
         }
 
         console.log('Map zoomed, updating aircraft data and refresh frequency');
+
         const center = map.getCenter();
-        fetchAircraftData(center.lat, center.lng);
+
+        if (isUpdateAllowed()) {
+            fetchAircraftData(center.lat, center.lng)
+
+        }
         
         restartUpdateTimer();
         
@@ -371,15 +383,28 @@ function calculateUpdateFrequency() {
         return 3 * seconds;
 
     } else if (radius > 25) {
-        return 1 * seconds;
+        return 2 * seconds;
 
     } else if (radius > 10) {
-        return 0.5 * seconds;
+        return 1 * seconds;
 
     } else {
-        return 0.2 * seconds;
+        return 0.5 * seconds;
 
     }
+}
+
+function isUpdateAllowed() {
+    const currentTime = Date.now();
+    const timeSinceLastUpdate = currentTime - (lastUpdateTime || 0);
+
+    if (timeSinceLastUpdate > minimumUpdateFrequency) {
+        return true;
+
+    }
+
+    return false;
+
 }
 
 function restartUpdateTimer(forced = false) {
@@ -638,8 +663,7 @@ function updateAircraftPanel(aircraft) {
     const type = aircraft.t || aircraft.type || 'Unknown';
     const latitude = aircraft.lat ? aircraft.lat.toFixed(4) : 'Unknown';
     const longitude = aircraft.lon ? aircraft.lon.toFixed(4) : 'Unknown';
-    const latestUpdate = aircraft.seen || 'Unknown';
-
+    //const latestUpdate = aircraft.seen || 'Unknown';
 
     document.getElementById('info-callsign').textContent = callsign;
     document.getElementById('info-icaoID').textContent = icaoID;
@@ -661,14 +685,12 @@ function updateAircraftPanel(aircraft) {
     document.getElementById('info-type').textContent = type;
 
     document.getElementById('info-position').textContent = `${latitude}, ${longitude}`;
-    document.getElementById('info-latestUpdate').textContent =
-        latestUpdate === 'Unknown'
-        ? latestUpdate
-        : latestUpdate < 5
-            ? '< 5 seconds ago'
-            : Math.floor(latestUpdate) + ' seconds ago';
-
-
+    // document.getElementById('info-latestUpdate').textContent =
+    //     latestUpdate === 'Unknown'
+    //     ? latestUpdate
+    //     : latestUpdate < 5
+    //         ? '< 5 seconds ago'
+    //         : Math.floor(latestUpdate) + ' seconds ago';
 
 }
 
