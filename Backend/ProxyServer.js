@@ -9,7 +9,7 @@ app.use(cors());
 
 function getTime() {
     const now = new Date();
-    const currentTime = now.toLocaleString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const currentTime = now.toLocaleDateString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
     return currentTime
 
@@ -39,7 +39,7 @@ app.get('/aircraft', async (req, res) => {
 
         const data = await response.json();
 
-        console.log(`Call from ${caller} at ${getTime()}; Found ${data.ac?.length} aircraft within ${dist} nm of ${Math.round(lat * 100) / 100}, ${Math.round(lon * 100) / 100}`);
+        console.log(`Call from ${caller} at UTC ${getTime()}; Found ${data.ac?.length} aircraft within ${dist} nm of ${Math.round(lat * 100) / 100}, ${Math.round(lon * 100) / 100}`);
         res.json(data);
 
     } catch (err) {
