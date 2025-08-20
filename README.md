@@ -94,7 +94,7 @@ npm install express cors node-fetch
 
 # Start the proxy server
 
-node ProxyServer.js
+node proxy-server.js
 
 ```
 
