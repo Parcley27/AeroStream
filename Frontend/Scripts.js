@@ -44,6 +44,10 @@ const keybinds = {
 
     disableTimeout: "t",
 
+    exitAircraft: "x",
+
+    exit: "Escape",
+
     debug: "d"
 
 }
@@ -627,10 +631,12 @@ function selectAircraft(aircraft) {
 }
 
 function deselectAircraft() {
-    closeAircraftPanel();
+    if (selectedAircraft) {
+        closeAircraftPanel();
 
-    selectedAircraft = null;
+        selectedAircraft = null;
 
+    }
 }
 
 function openAircraftPanel(aircraft) {
@@ -733,6 +739,15 @@ function resetMap() {
 
     } else { console.log('Map reset error'); }
 
+}
+
+function exitState() {
+    if (selectedAircraft) {
+        deselectAircraft();
+
+        console.log('Exited state: Selected aircraft')
+
+    }
 }
 
 // Extra settings
@@ -891,6 +906,19 @@ document.addEventListener('keydown', function(event) {
         case keybinds.disableTimeout.toUpperCase():
             console.log('Stopping session timeout...')
             sessionTimeout.stopTimeout();
+
+            break;
+
+        case keybinds.exitAircraft:
+        case keybinds.exitAircraft.toUpperCase():
+            console.log('Deselecting aircraft...')
+            deselectAircraft();
+
+            break;
+        
+        case keybinds.exit:
+            console.log('Escaping current state...');
+            exitState();
 
             break;
         
