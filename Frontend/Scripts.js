@@ -259,13 +259,15 @@ function initializeMap() {
     
     // OpenStreetMap layer
     openStreetMapTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 15
+        maxZoom: 15,
+        minZoom: 3
 
     });
 
     // No label map layer
     noLabelTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-        maxZoom: 20
+        maxZoom: 20,
+        minZoom: 3
 
     });
 
