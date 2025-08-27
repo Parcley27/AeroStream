@@ -39,7 +39,7 @@ const keybinds = {
     toggleLabels: "l",
     toggleApperance: "a",
 
-    toggleCursor: "h",
+    toggleCursor: "m",
     changeView: "v",
 
     disableTimeout: "t",
