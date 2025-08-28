@@ -34,6 +34,19 @@
     --light-tertiary: #cbdbf6;
     --light-accent: #6ea3ee;
 
+    /* Colour mode */
+    --colour-background: #ffffff;
+    --colour-popup: rgba(255, 255, 255, 0.8);
+    --colour-popup-solid: rgba(255, 255, 255, 0.9);
+
+    --colour-text: #223f6d;
+    --colour-border: #6ea3ee;
+
+    --colour-accent: #6ea3ee;
+    --colour-primary: #6ea3ee;
+    --colour-secondary: #253a5b;
+    --colour-tertiary: #cbdbf6;
+
 }
 
 /* Element styling */
@@ -55,6 +68,12 @@ body.dark-mode {
 body.light-mode {
     background-color: var(--light-background);
     color: var(--light-text);
+
+}
+
+body.colour-mode {
+    background-color: var(--colour-background);
+    color: var(--colour-text);
 
 }
 
@@ -82,6 +101,11 @@ body.light-mode {
 
 }
 
+.colour-mode .leaflet-tile-pane {
+    filter: none;
+
+}
+
 /* Loading screen */
 #loading-screen {
     position: absolute;
@@ -102,6 +126,12 @@ body.light-mode {
     background: var(--light-popup-solid);
     color: var(--light-text);
     border: 1px solid var(--light-border);
+
+}
+.colour-mode #loading-screen {
+    background: var(--colour-popup-solid);
+    color: var(--colour-text);
+    border: 1px solid var(--colour-border);
 
 }
 
@@ -126,6 +156,12 @@ body.light-mode {
     border: 1px solid var(--light-border);
 
 }
+.colour-mode #coordinate-prompt {
+    background: var(--colour-popup-solid);
+    color: var(--colour-text);
+    border: 1px solid var(--colour-border);
+
+}
 
 #coordinate-prompt h3 {
     margin-top: 0;
@@ -134,6 +170,10 @@ body.light-mode {
 }
 .light-mode #coordinate-prompt h3 {
     color: var(--light-text);
+
+}
+.colour-mode #coordinate-prompt h3 {
+    color: var(--colour-text);
 
 }
 
@@ -151,6 +191,12 @@ body.light-mode {
     background: var(--light-background);
     color: var(--light-text);
     border: 1px solid var(--light-border);
+
+}
+.colour-mode #coordinate-prompt input {
+    background: var(--colour-background);
+    color: var(--colour-text);
+    border: 1px solid var(--colour-border);
 
 }
 
@@ -172,6 +218,12 @@ body.light-mode {
     border: 1px solid var(--light-border);
 
 }
+.colour-mode #coordinate-prompt button {
+    background: var(--colour-tertiary);
+    color: var(--colour-text);
+    border: 1px solid var(--colour-border);
+
+}
 
 #coordinate-prompt button:hover {
     background: var(--dark-text);
@@ -181,6 +233,11 @@ body.light-mode {
 .light-mode #coordinate-prompt button:hover {
     background: var(--light-accent);
     color: var(--light-text);
+
+}
+.colour-mode #coordinate-prompt button:hover {
+    background: var(--colour-accent);
+    color: var(--colour-text);
 
 }
 .location-button {
@@ -193,6 +250,11 @@ body.light-mode {
     color: var(--light-text);
 
 }
+.colour-mode .location-button {
+    background: var(--colour-background) !important;
+    color: var(--colour-text);
+
+}
 .location-button:hover {
     background: var(--dark-text) !important;
     color: var(--dark-tertiary) !important;
@@ -201,6 +263,11 @@ body.light-mode {
 .light-mode .location-button:hover {
     background: var(--light-accent) !important;
     color: var(--light-text) !important;
+
+}
+.colour-mode .location-button:hover {
+    background: var(--colour-accent) !important;
+    color: var(--colour-text) !important;
 
 }
 
@@ -228,6 +295,12 @@ body.light-mode {
     border-color: var(--light-border);
 
 }
+.colour-mode #aircraft-info-panel {
+    background: var(--colour-popup);
+    color: var(--colour-text);
+    border-color: var(--colour-border);
+
+}
 
 #aircraft-info-panel .panel-header {
     border-bottom: 1px solid var(--dark-border);
@@ -240,6 +313,10 @@ body.light-mode {
 }
 .light-mode #aircraft-info-panel .panel-header {
     border-color: var(--light-border);
+
+}
+.colour-mode #aircraft-info-panel .panel-header {
+    border-color: var(--colour-border);
 
 }
 
@@ -258,6 +335,11 @@ body.light-mode {
     border: 1px solid var(--light-border);
 
 }
+.colour-mode #aircraft-info-panel .close-button {
+    border: 1px solid var(--colour-border);
+    color: var(--colour-text);
+
+}
 
 #aircraft-info-panel .close-button:hover {
     background: var(--dark-primary);
@@ -267,6 +349,11 @@ body.light-mode {
 .light-mode #aircraft-info-panel .close-button:hover {
     background: var(--light-primary);
     color: var(--light-background);
+
+}
+.colour-mode #aircraft-info-panel .close-button:hover {
+    background: var(--colour-primary);
+    color: var(--colour-background);
 
 }
 
@@ -312,6 +399,12 @@ body.light-mode {
     border: 1px solid var(--light-border);
 
 }
+.colour-mode #controls-display {
+    background: var(--colour-popup);
+    color: var(--colour-text);
+    border: 1px solid var(--colour-border);
+
+}
 .zoom-buttons {
     /* Horizontal zoom button row */
     display: flex;
@@ -340,6 +433,12 @@ body.light-mode {
     border: 1px solid var(--light-border);
 
 }
+.colour-mode #controls-display button {
+    background: var(--colour-background);
+    color: var(--colour-text);
+    border: 1px solid var(--colour-border);
+
+}
 
 /* Button hover effect */
 #controls-display button:hover {
@@ -350,6 +449,11 @@ body.light-mode {
 .light-mode #controls-display button:hover {
     background: var(--light-accent);
     color: var(--light-accent-hover);
+
+}
+.colour-mode #controls-display button:hover {
+    background: var(--colour-accent);
+    color: var(--colour-text);
 
 }
 
@@ -386,6 +490,12 @@ body.light-mode {
     border: 1px solid var(--light-border);
 
 }
+.colour-mode #attribution-panel {
+    background: var(--colour-popup);
+    color: var(--colour-text);
+    border: 1px solid var(--colour-border);
+
+}
 
 #attribution-panel a {
     color: var(--dark-accent);
@@ -393,9 +503,12 @@ body.light-mode {
     transition: opacity 0.3s ease;
 
 }
-
 .light-mode #attribution-panel a {
     color: var(--light-accent);
+
+}
+.colour-mode #attribution-panel a {
+    color: var(--colour-accent);
 
 }
 
@@ -429,6 +542,12 @@ body.light-mode {
     border: 1px solid var(--light-border);
 
 }
+.colour-mode #timeout-dialog {
+    background: var(--colour-popup-solid);
+    color: var(--colour-text);
+    border: 1px solid var(--colour-border);
+
+}
 
 #fullscreen-cover {
     position: fixed;
@@ -436,13 +555,17 @@ body.light-mode {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: var(--dark-popup-solid);
+    background-color: var(--dark-popup);
     z-index: 10000;
     display: none;
 
 }
 .light-mode #fullscreen-cover {
-    background-color: var(--light-popup-solid);
+    background-color: var(--light-popup);
+
+}
+.colour-mode #fullscreen-cover {
+    background-color: var(--colour-popup);
 
 }
 

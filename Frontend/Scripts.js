@@ -11,6 +11,8 @@ let noLabelTileLayer;
 let currentTileLayer;
 let usingNoLabels = false;
 
+let apperance = 'light'; // 'dark or 'light' or 'colour'
+
 let selectedAircraft;
 let aircraftMarkers = new Map(); // Store markers by aircraft hex
 
@@ -25,7 +27,7 @@ let updateInterval;
 let minimumUpdateFrequency = 250; // 0.25 seconds
 let lastUpdateTime; 
 
-let timeoutLength = 60 * 60 * seconds; // 1 hour
+let timeoutLength = 6 * seconds; // 1 hour
 
 const keybinds = {
     zoomIn: "+",
@@ -37,7 +39,7 @@ const keybinds = {
     resetMap: "r",
 
     toggleLabels: "l",
-    toggleApperance: "a",
+    cycleApperance: "a",
 
     toggleCursor: "m",
     changeView: "v",
@@ -803,26 +805,26 @@ function toggleCursor() {
 
 }
 
-function toggleApperance() {
-    const isDarkMode = document.body.classList.contains('dark-mode');
+function cycleApperance() {
+    document.body.classList.remove(`${apperance}-mode`);
 
-    if (isDarkMode) {
-        document.body.classList.remove('dark-mode');
-        document.body.classList.add('light-mode');
+    if (apperance === 'dark') {
+        apperance = 'light';
 
-        fetchAircraftData();
-
-        console.log('Switched to light mode');
-
-    } else {
-        document.body.classList.remove('light-mode');
-        document.body.classList.add('dark-mode');
-
-        fetchAircraftData();
-
-        console.log('Switched to dark mode');
+    } else if (apperance === 'light') {
+        apperance = 'colour';   
+    
+    } else if (apperance === 'colour') {
+        apperance = 'dark';
 
     }
+
+    document.body.classList.add(`${apperance}-mode`);
+
+    fetchAircraftData();
+
+    console.log(`Switched to ${apperance}-mode`);
+
 }
 
 function toggleMapLabels() {
@@ -890,10 +892,10 @@ document.addEventListener('keydown', function(event) {
 
             break;
         
-        case keybinds.toggleApperance:
-        case keybinds.toggleApperance.toUpperCase():
-            console.log('Toggling apperance...');
-            toggleApperance();
+        case keybinds.cycleApperance:
+        case keybinds.cycleApperance.toUpperCase():
+            console.log('Cycling apperance...');
+            cycleApperance();
 
             break;
         
