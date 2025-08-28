@@ -27,7 +27,8 @@ let updateInterval;
 let minimumUpdateFrequency = 250; // 0.25 seconds
 let lastUpdateTime; 
 
-let timeoutLength = 6 * seconds; // 1 hour
+let timeoutLength = 60 * 60 * seconds; // 1 hour
+// let timeoutLength = 5 * seconds; // debug
 
 const keybinds = {
     zoomIn: "+",
@@ -111,7 +112,10 @@ class SessionTimeout {
 const sessionTimeout = new SessionTimeout(timeoutLength);
 
 document.addEventListener('click', function(event) {
-    sessionTimeout.resetTimer();
+    if (!selectedAircraft) {
+        sessionTimeout.resetTimer();
+
+    }
 
 });
 
@@ -121,7 +125,10 @@ document.addEventListener('keypress', function(event) {
 
     }
     
-    sessionTimeout.resetTimer();
+    if (!selectedAircraft) {
+        sessionTimeout.resetTimer();
+
+    }
 
 });
 
@@ -524,11 +531,13 @@ function updateAircraftDisplay(aircraftList) {
                 // Update the stored aircraft data but don't retrigger selection
                 selectedAircraft = aircraft;
                 updateAircraftPanel(aircraft); // Just update the panel data
-                console.log('Updated selected aircraft data without retriggering selection');
+                //console.log('Updated selected aircraft data without retriggering selection');
+
             }
 
             const marker = L.marker([latitude, longitude], {
                 icon: createAircraftIcon(aircraft, isSelected)
+
             });
 
             marker.aircraftData = aircraft;
@@ -537,6 +546,7 @@ function updateAircraftDisplay(aircraftList) {
             // Add to aircraft layer
             marker.addTo(aircraftLayer);
             aircraftMarkers.set(aircraft.hex, marker);
+
         }
     });
 
@@ -545,6 +555,7 @@ function updateAircraftDisplay(aircraftList) {
         selectedAircraft = null;
         closeAircraftPanel();
         console.log('Selected aircraft is no longer visible, selection has been cleared');
+
     }
 }
 
@@ -585,6 +596,8 @@ function createAircraftIcon(aircraft, isSelected = false) {
 }
 
 function selectAircraft(aircraft) {
+    sessionTimeout.stopTimeout();
+
     // Guard clause to handle undefined aircraft
     if (!aircraft) {
         console.warn('selectAircraft called with undefined aircraft');
@@ -635,6 +648,8 @@ function selectAircraft(aircraft) {
 }
 
 function deselectAircraft() {
+    sessionTimeout.resetTimer();
+
     if (selectedAircraft) {
         closeAircraftPanel();
 
