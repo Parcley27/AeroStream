@@ -10,42 +10,57 @@
 
     /* Dark mode colours */
     --dark-background: #000000;
+    --dark-background-hover: #cbdbf6;
+
     --dark-popup: rgba(0, 0, 0, 0.8);
     --dark-popup-solid: rgba(0, 0, 0, 0.9);
 
     --dark-text: #6ea3ee;
+    --dark-text-hover: #000000;
     --dark-border: #6ea3ee;
 
+    --dark-accent: #6ea3ee;
     --dark-primary: #cbdbf6;
     --dark-secondary: #6ea3ee;;
     --dark-tertiary: #223f6d;
-    --dark-accent: #6ea3ee;
+
+    --dark-aircraft: #6ea3ee;
 
     /* Light mode */
     --light-background: #ffffff;
+    --light-background-hover: #6ea3ee;
+
     --light-popup: rgba(255, 255, 255, 0.8);
     --light-popup-solid: rgba(255, 255, 255, 0.9);
 
     --light-text: #253a5b;
+    --light-text-hover: #ffffff;
     --light-border: #253a5b;
 
+    --light-accent: #6ea3ee;
     --light-primary: #223f6d;
     --light-secondary: #6ea3ee;
     --light-tertiary: #cbdbf6;
-    --light-accent: #6ea3ee;
+
+    --light-aircraft: #6ea3ee;
 
     /* Colour mode */
     --colour-background: #ffffff;
+    --colour-background-hover: #cbdbf6;
+
     --colour-popup: rgba(255, 255, 255, 0.8);
     --colour-popup-solid: rgba(255, 255, 255, 0.9);
 
     --colour-text: #223f6d;
+    --colour-text-hover: #6ea3ee;
     --colour-border: #6ea3ee;
 
-    --colour-accent: #6ea3ee;
-    --colour-primary: #6ea3ee;
-    --colour-secondary: #253a5b;
-    --colour-tertiary: #cbdbf6;
+    --colour-accent: #cbdbf6;
+    --colour-primary: #223f6d;
+    --colour-secondary: #6ea3ee;
+    --colour-tertiary: #6ea3ee;
+
+    --colour-aircraft: #ebbc21;
 
 }
 
@@ -226,18 +241,18 @@ body.colour-mode {
 }
 
 #coordinate-prompt button:hover {
-    background: var(--dark-text);
-    color: var(--dark-tertiary);
+    background: var(--dark-background-hover);
+    color: var(--dark-text-hover);
 
 }
 .light-mode #coordinate-prompt button:hover {
-    background: var(--light-accent);
-    color: var(--light-text);
+    background: var(--light-background-hover);
+    color: var(--light-text-hover);
 
 }
 .colour-mode #coordinate-prompt button:hover {
-    background: var(--colour-accent);
-    color: var(--colour-text);
+    background: var(--colour-background-hover);
+    color: var(--colour-text-hover);
 
 }
 .location-button {
@@ -256,18 +271,18 @@ body.colour-mode {
 
 }
 .location-button:hover {
-    background: var(--dark-text) !important;
-    color: var(--dark-tertiary) !important;
+    background: var(--dark-background-hover) !important;
+    color: var(--dark-text-hover) !important;
 
 }
 .light-mode .location-button:hover {
-    background: var(--light-accent) !important;
-    color: var(--light-text) !important;
+    background: var(--light-background-hover) !important;
+    color: var(--light-text-hover) !important;
 
 }
 .colour-mode .location-button:hover {
-    background: var(--colour-accent) !important;
-    color: var(--colour-text) !important;
+    background: var(--colour-background-hover) !important;
+    color: var(--colour-text-hover) !important;
 
 }
 
@@ -342,18 +357,18 @@ body.colour-mode {
 }
 
 #aircraft-info-panel .close-button:hover {
-    background: var(--dark-primary);
-    color: var(--dark-background);
+    background: var(--dark-background-hover);
+    color: var(--dark-text-hover);
 
 }
 .light-mode #aircraft-info-panel .close-button:hover {
-    background: var(--light-primary);
-    color: var(--light-background);
+    background: var(--light-background-hover);
+    color: var(--light-text-hover);
 
 }
 .colour-mode #aircraft-info-panel .close-button:hover {
-    background: var(--colour-primary);
-    color: var(--colour-background);
+    background: var(--colour-background-hover);
+    color: var(--colour-text-hover);
 
 }
 
@@ -442,18 +457,18 @@ body.colour-mode {
 
 /* Button hover effect */
 #controls-display button:hover {
-    background: var(--dark-tertiary);
-    color: var(--dark-accent);
+    background: var(--dark-background-hover);
+    color: var(--dark-text-hover);
 
 }
 .light-mode #controls-display button:hover {
-    background: var(--light-accent);
-    color: var(--light-accent-hover);
+    background: var(--light-background-hover);
+    color: var(--light-text-hover);
 
 }
 .colour-mode #controls-display button:hover {
-    background: var(--colour-accent);
-    color: var(--colour-text);
+    background: var(--colour-background-hover);
+    color: var(--colour-text-hover);
 
 }
 

@@ -558,12 +558,11 @@ function updateAircraftDisplay(aircraftList) {
 
     }
 }
-
+s
 function createAircraftIcon(aircraft, isSelected = false) {
     //if (selectedAircraft.hex == aircraft.hex) { isSelected = true };
 
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    const iconColour = isSelected ? 'var(--general-accent)' : isDarkMode ? 'var(--dark-primary)' : 'var(--light-primary)';
+    const iconColour = isSelected ? `var(--${apperance}-aircraft)` : `var(--${apperance}-primary)`;
 
     const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
     const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
