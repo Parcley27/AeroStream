@@ -558,7 +558,7 @@ function updateAircraftDisplay(aircraftList) {
 
     }
 }
-s
+
 function createAircraftIcon(aircraft, isSelected = false) {
     //if (selectedAircraft.hex == aircraft.hex) { isSelected = true };
 
