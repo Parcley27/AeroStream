@@ -11,7 +11,7 @@ let noLabelTileLayer;
 let currentTileLayer;
 let usingNoLabels = false;
 
-let apperance = 'light'; // 'dark or 'light' or 'colour'
+let apperance = 'light'; // 'light' -> 'colour' -> 'dark'
 
 let selectedAircraft;
 let aircraftMarkers = new Map(); // Store markers by aircraft hex
@@ -21,10 +21,10 @@ let cursorVisible = true;
 
 let seconds = 1000;
 
-let updateFrequency = 5 * seconds; // 5 seconds (ms)
+let updateFrequency = 5 * seconds;
 let updateInterval;
 
-let minimumUpdateFrequency = 250; // 0.25 seconds
+let minimumUpdateFrequency = 0.25 * seconds;
 let lastUpdateTime; 
 
 let timeoutLength = 60 * 60 * seconds; // 1 hour
