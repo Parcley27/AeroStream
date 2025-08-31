@@ -1,6 +1,6 @@
 # AeroStream
 
-A free to use, live air traffic display for anywhere in the world.
+Real-time, free flight tracking for aircraft in your area and around the world.
 
 Visit [airtraffic.online](https://airtraffic.online/) to check out the site, with beta updates visible at [beta.airtraffic.online](https://beta.airtraffic.online/)
 
