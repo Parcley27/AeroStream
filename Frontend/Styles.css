@@ -498,7 +498,6 @@ body.colour-mode {
     min-width: 200px;
 
 }
-
 .light-mode #attribution-panel {
     background: var(--light-popup);
     color: var(--light-text);
@@ -523,7 +522,7 @@ body.colour-mode {
 
 }
 .colour-mode #attribution-panel a {
-    color: var(--colour-accent);
+    color: var(--colour-seccondary);
 
 }
 
