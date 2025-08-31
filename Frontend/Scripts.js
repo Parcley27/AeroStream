@@ -562,7 +562,8 @@ function updateAircraftDisplay(aircraftList) {
 function createAircraftIcon(aircraft, isSelected = false) {
     //if (selectedAircraft.hex == aircraft.hex) { isSelected = true };
 
-    const iconColour = isSelected ? `var(--${apperance}-aircraft)` : `var(--${apperance}-primary)`;
+    const iconColour = isSelected ? `var(--${apperance}-selected-aircraft)` : `var(--${apperance}-aircraft)`;
+    const borderColour = isSelected ? `var(--${apperance}-aircraft)` : `var(--${apperance}-selected-aircraft)`;; 
 
     const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
     const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
@@ -577,8 +578,11 @@ function createAircraftIcon(aircraft, isSelected = false) {
     const iconHtml = `
         <svg width="30" height="30" viewBox="-15 -15 30 30" style="overflow: visible;">
             <g transform="rotate(${heading})">
-                <rect x="-4" y="-4" width="8" height="8" fill="none" stroke="${iconColour}" stroke-width="2"/>
+                <line x1="0" y1="-4" x2="0" y2="${vectorEnd - 0.5}" stroke="${borderColour}" stroke-width="3"/>
+                <rect x="-4" y="-4" width="8" height="8" fill="none" stroke="${borderColour}" stroke-width="3"/>
+
                 <line x1="0" y1="-4" x2="0" y2="${vectorEnd}" stroke="${iconColour}" stroke-width="2"/>
+                <rect x="-4" y="-4" width="8" height="8" fill="none" stroke="${iconColour}" stroke-width="2"/>
             </g>
         </svg>
         <!--<div class="callsign-label">${callsign}</div>-->

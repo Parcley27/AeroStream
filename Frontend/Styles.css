@@ -24,7 +24,8 @@
     --dark-secondary: #6ea3ee;;
     --dark-tertiary: #223f6d;
 
-    --dark-aircraft: #6ea3ee;
+    --dark-aircraft: #cbdbf6;
+    --dark-selected-aircraft: #6ea3ee;
 
     /* Light mode */
     --light-background: #ffffff;
@@ -42,7 +43,8 @@
     --light-secondary: #6ea3ee;
     --light-tertiary: #cbdbf6;
 
-    --light-aircraft: #6ea3ee;
+    --light-aircraft: #223f6d;
+    --light-selected-aircraft: #6ea3ee;
 
     /* Colour mode */
     --colour-background: #ffffff;
@@ -61,6 +63,7 @@
     --colour-tertiary: #6ea3ee;
 
     --colour-aircraft: #ebbc21;
+    --colour-selected-aircraft: #e86c68;
 
 }
 
