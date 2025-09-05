@@ -18,6 +18,7 @@ BETA_DIR="/var/www/beta.airtraffic.online"
 if [ "$EUID" -ne 0 ]; then
     echo -e "${RED}Please run with sudo: sudo update-beta.sh${NC}"
     exit 1
+    
 fi
 
 echo -e "${YELLOW}Checking beta directory...${NC}"
@@ -26,6 +27,7 @@ echo -e "${YELLOW}Checking beta directory...${NC}"
 if [ ! -d "$BETA_DIR" ]; then
     echo -e "${RED}Beta directory doesn't exist: $BETA_DIR${NC}"
     exit 1
+
 fi
 
 echo -e "${GREEN}Beta directory found${NC}"
@@ -46,6 +48,10 @@ git reset --hard origin/main
 
 echo -e "${GREEN}Repository updated successfully${NC}"
 
+echo -e "${YELLOW}Restarting proxy service...${NC}"
+systemctl restart aerostream-proxy
+echo -e "${GREEN}Proxy service restarted${NC}"
+
 echo -e "${YELLOW}Setting proper permissions...${NC}"
 chown -R www-data:www-data .
 chmod -R 755 .
@@ -62,10 +68,12 @@ if [ $? -eq 0 ]; then
     echo -e "${YELLOW}Reloading nginx...${NC}"
     systemctl reload nginx
     echo -e "${GREEN}Nginx reloaded${NC}"
+
 else
     echo -e "${RED}Nginx configuration error!${NC}"
     echo -e "${YELLOW}Please check nginx configuration manually${NC}"
     exit 1
+
 fi
 
 echo ""
