@@ -55,88 +55,13 @@ const keybinds = {
 
 }
 
-class SessionTimeout {
-    constructor(length = 60 * 60 * seconds) {
-        this.timeoutDuration = length;
-        this.timeoutId = null;
-        this.isTimedOut = false;
-
-    }
-
-    resetTimer() {
-        if (this.isTimedOut) return;
-        
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
-
-        }
-        
-        this.timeoutId = setTimeout(() => {
-            this.timeoutSession();
-        }, this.timeoutDuration);
-        
-        console.log('Session timer reset');
-
-    }
-
-    timeoutSession() {
-        this.isTimedOut = true;
-
-        if (updateInterval) {
-            clearInterval(updateInterval);
-
-        }
-
-        const timeoutDialog = document.getElementById('timeout-dialog');
-        const fullscreenCover = document.getElementById('fullscreen-cover');
-
-        timeoutDialog.style.display = 'block';
-        fullscreenCover.style.display = 'block';
-
-        console.log("Session timed out due to inactivity")
-
-    }
-
-    stopTimeout() {
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
-            this.timeoutId = null;
-
-        }
-
-        console.log('Session timeout stopped');
-
-    }
-}
-
-const sessionTimeout = new SessionTimeout(timeoutLength);
-
-document.addEventListener('click', function(event) {
-    if (!selectedAircraft) {
-        sessionTimeout.resetTimer();
-
-    }
-
-});
-
-document.addEventListener('keypress', function(event) {
-    if (event.key === keybinds.disableTimeout || event.key === keybinds.disableTimeout.toUpperCase()) {
-        return;
-
-    }
-    
-    if (!selectedAircraft) {
-        sessionTimeout.resetTimer();
-
-    }
-
-});
-
-// Start getting location on page load
+// Run startup methods
 window.onload = function() {
-    requestLocation();
+    // Startup aux scripts
+    SessionManager.init();
 
-    sessionTimeout.resetTimer();
+    // Start location request
+    requestLocation();
 
 };
 
@@ -599,7 +524,7 @@ function createAircraftIcon(aircraft, isSelected = false) {
 }
 
 function selectAircraft(aircraft) {
-    sessionTimeout.stopTimeout();
+    SessionManager.stopTimeout();
 
     // Guard clause to handle undefined aircraft
     if (!aircraft) {
@@ -927,7 +852,7 @@ document.addEventListener('keydown', function(event) {
         case keybinds.disableTimeout:
         case keybinds.disableTimeout.toUpperCase():
             console.log('Stopping session timeout...')
-            sessionTimeout.stopTimeout();
+            SessionManager.stopTimeout();
 
             break;
 
