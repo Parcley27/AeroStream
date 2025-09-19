@@ -33,6 +33,23 @@ const SessionManager = {
         });
     },
 
+    resetTimer() {
+        if (this.isTimedOut) return;
+
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+
+        }
+
+        this.timeoutId = setTimeout(() => {
+            this.timeoutSession();
+
+        }, this.timeoutDuration);
+
+        console.log('Session timer reset');
+
+    },
+
     stopTimeout() {
         console.log('Stopping session timeout');
         this.sessionTimeout.stopTimeout();

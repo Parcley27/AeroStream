@@ -493,6 +493,7 @@ function createAircraftIcon(aircraft, isSelected = false) {
     const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
     const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
     const speed = aircraft.gs || aircraft.speed || 0;
+    const altitude = aircraft.alt_baro || aircraft.altitude || 0
 
     // Scale vector length based on speed
     const minLength = 8;
@@ -500,8 +501,28 @@ function createAircraftIcon(aircraft, isSelected = false) {
     const vectorLength = minLength + (maxLength - minLength) * Math.min(speed / 550, 1);
     const vectorEnd = -4 - vectorLength;
 
+    // Move shadow based on altitude
+    const maxAltitude = 60000;
+    const maxShadowOffset = 16;
+    const minShadowOffset = 2;
+    
+    const normalizedAltitude = Math.min(Math.max(altitude, 0), maxAltitude) / maxAltitude;
+    const shadowOffset = minShadowOffset + (maxShadowOffset - minShadowOffset) * normalizedAltitude;
+
+    const shadowColour = 'rgba(0, 0, 0, 0.15)'
+
     const iconHtml = `
-        <svg width="30" height="30" viewBox="-15 -15 30 30" style="overflow: visible;">
+        <svg width="40" height="40" viewBox="-20 -20 40 40" style="overflow: visible;">
+            <!-- Shadow icon -->
+            <g transform="translate(0, ${shadowOffset}) rotate(${heading})">
+                <line x1="0" y1="-4" x2="0" y2="${vectorEnd - 0.5}" stroke="${shadowColour}" stroke-width="3"/>
+                <rect x="-4" y="-4" width="8" height="8" fill="none" stroke="${shadowColour}" stroke-width="3"/>
+                
+                <line x1="0" y1="-4" x2="0" y2="${vectorEnd}" stroke="${shadowColour}" stroke-width="2"/>
+                <rect x="-4" y="-4" width="8" height="8" fill="none" stroke="${shadowColour}" stroke-width="2"/>
+            </g>
+            
+            <!-- Main aircraft icon -->
             <g transform="rotate(${heading})">
                 <line x1="0" y1="-4" x2="0" y2="${vectorEnd - 0.5}" stroke="${borderColour}" stroke-width="3"/>
                 <rect x="-4" y="-4" width="8" height="8" fill="none" stroke="${borderColour}" stroke-width="3"/>
@@ -576,7 +597,7 @@ function selectAircraft(aircraft) {
 }
 
 function deselectAircraft() {
-    sessionTimeout.resetTimer();
+    SessionManager.resetTimer();
 
     if (selectedAircraft) {
         closeAircraftPanel();
