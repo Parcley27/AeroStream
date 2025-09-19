@@ -41,7 +41,7 @@ const SessionManager = {
 };
 
 class SessionTimeout {
-    constructor(length = 6 * 1000) {
+    constructor(length = 60 * 60 * 1000) {
         this.timeoutDuration = length;
         this.timeoutId = null;
         this.isTimedOut = false;
