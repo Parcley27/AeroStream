@@ -9,15 +9,9 @@ let isProgrammedMove = false;
 let openStreetMapTileLayer;
 let noLabelTileLayer;
 let currentTileLayer;
-let usingNoLabels = false;
-
-let apperance = 'light'; // 'light' -> 'colour' -> 'dark'
 
 let selectedAircraft;
 let aircraftMarkers = new Map(); // Store markers by aircraft hex
-
-let viewState = 0;
-let cursorVisible = true;
 
 let seconds = 1000;
 
@@ -40,7 +34,7 @@ const keybinds = {
     resetMap: "r",
 
     toggleLabels: "l",
-    cycleApperance: "a",
+    cycleAppearance: "a",
 
     toggleCursor: "m",
     changeView: "v",
@@ -59,6 +53,7 @@ const keybinds = {
 window.onload = function() {
     // Startup aux scripts
     SessionManager.init();
+    UIManager.init();
 
     // Start location request
     requestLocation();
@@ -487,13 +482,25 @@ function updateAircraftDisplay(aircraftList) {
 function createAircraftIcon(aircraft, isSelected = false) {
     //if (selectedAircraft.hex == aircraft.hex) { isSelected = true };
 
-    const iconColour = isSelected ? `var(--${apperance}-selected-aircraft)` : `var(--${apperance}-aircraft)`;
-    const borderColour = isSelected ? `var(--${apperance}-aircraft)` : `var(--${apperance}-selected-aircraft)`;; 
+    const iconColour = isSelected ? `var(--${UIManager.getCurrentAppearance()}-selected-aircraft)` : `var(--${UIManager.getCurrentAppearance()}-aircraft)`;
+    const borderColour = isSelected ? `var(--${UIManager.getCurrentAppearance()}-aircraft)` : `var(--${UIManager.getCurrentAppearance()}-selected-aircraft)`;; 
 
     const heading = aircraft.track || aircraft.true_heading || aircraft.nav_heading || aircraft.mag_heading || 0;
     const callsign = aircraft.flight?.trim() || aircraft.r || 'N/A';
     const speed = aircraft.gs || aircraft.speed || 0;
-    const altitude = aircraft.alt_baro || aircraft.altitude || 0
+    let altitude = aircraft.alt_baro || aircraft.altitude || 0;
+
+    // Handle "ground" or non-numeric values
+    if (typeof altitude === 'string' || altitude === null || altitude === undefined) {
+        altitude = 0;
+        
+    }
+
+    altitude = Number(altitude);
+    if (isNaN(altitude)) {
+        altitude = 0;
+
+    }
 
     // Scale vector length based on speed
     const minLength = 8;
@@ -718,99 +725,6 @@ function exitState() {
     }
 }
 
-// Extra settings
-function cycleView() {
-    const controls = document.getElementById('controls-display');
-    const attributions = document.getElementById('attribution-panel');
-    
-    switch(viewState % 3) {
-        case 0: // Show controls
-            controls.style.display = 'flex';
-
-            console.log('Controls shown');
-
-            break;
-            
-        case 1: // Show attributions
-            attributions.style.display = 'block';
-
-            console.log('Attributions shown');
-
-            break;
-            
-        case 2: // Hide both
-            controls.style.display = 'none';
-            attributions.style.display = 'none';
-
-            console.log('All panels hidden');
-
-            break;
-
-    }
-
-    viewState += 1;
-    
-}
-
-function toggleCursor() {
-    if (!cursorVisible) {
-        document.body.classList.remove('hide-cursor');
-
-        console.log('Cursor shown');
-
-    } else {
-        document.body.classList.add('hide-cursor');
-
-        console.log('Cursor hidden');
-
-    }
-
-    cursorVisible = !cursorVisible;
-
-}
-
-function cycleApperance() {
-    document.body.classList.remove(`${apperance}-mode`);
-
-    if (apperance === 'dark') {
-        apperance = 'light';
-
-    } else if (apperance === 'light') {
-        apperance = 'colour';   
-    
-    } else if (apperance === 'colour') {
-        apperance = 'dark';
-
-    }
-
-    document.body.classList.add(`${apperance}-mode`);
-
-    fetchAircraftData();
-
-    console.log(`Switched to ${apperance}-mode`);
-
-}
-
-function toggleMapLabels() {
-    if (!map) return;
-
-    map.removeLayer(currentTileLayer);
-
-    if (usingNoLabels) {
-        currentTileLayer = openStreetMapTileLayer;
-        console.log('Switched to OpenStreetMap (with labels)');
-
-    } else {
-        currentTileLayer = noLabelTileLayer;
-        console.log('Switched to no label map');
-
-    }
-
-    currentTileLayer.addTo(map);
-    usingNoLabels = !usingNoLabels;
-
-}
-
 // Keyboard shorcuts
 document.addEventListener('keydown', function(event) {
     switch(event.key) {
@@ -845,28 +759,28 @@ document.addEventListener('keydown', function(event) {
         case keybinds.toggleLabels:
         case keybinds.toggleLabels.toUpperCase():
             console.log('Toggling map labels...');
-            toggleMapLabels();
+            UIManager.toggleMapLabels();
 
             break;
 
         case keybinds.toggleCursor:
         case keybinds.toggleCursor.toUpperCase():
             console.log('Toggling cursor...');
-            toggleCursor();
+            UIManager.toggleCursor();
 
             break;
         
-        case keybinds.cycleApperance:
-        case keybinds.cycleApperance.toUpperCase():
-            console.log('Cycling apperance...');
-            cycleApperance();
+        case keybinds.cycleAppearance:
+        case keybinds.cycleAppearance.toUpperCase():
+            console.log('Cycling appearance...');
+            UIManager.cycleAppearance();
 
             break;
         
         case keybinds.changeView:
         case keybinds.changeView.toUpperCase():
             console.log('Cycling controls...')
-            cycleView();
+            UIManager.cycleView();
             
             break;
         

@@ -4,11 +4,13 @@
 <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BD6X6XVNFK"></script>
+    
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-BD6X6XVNFK');
+        
     </script>
 
     <!-- Page setup-->
@@ -64,7 +66,7 @@
         <button onclick = "centerMap()">Center Map (C)</button>
         <button onclick = "resetMap()">Reset View (R)</button>
         <button onclick = "toggleMapLabels()">Toggle Map Labels (L)</button>
-        <button onclick = "cycleApperance()">Cycle Apperance (A)</button>
+        <button onclick = "cycleAppearance()">Cycle Appearance (A)</button>
 
         <span>  </span>
 
@@ -206,8 +208,10 @@
     <script src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <!-- JS Scripting -->
-    <script src="Scripts/session-manager.js"></script>
-    <script src="Scripts/main.js"></script>
+    <script src = "Scripts/session-manager.js"></script>
+    <script src = "Scripts/ui-manager.js"></script>
+
+    <script src = "Scripts/main.js"></script>
 
 </body>
 </html>
