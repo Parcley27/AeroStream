@@ -10,6 +10,8 @@ const SessionManager = {
         this.setupEventListeners();
         this.sessionTimeout.resetTimer();
 
+        console.log("Session Manager initiated");
+
     },
 
     setupEventListeners() {
