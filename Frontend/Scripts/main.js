@@ -39,6 +39,8 @@ const keybinds = {
     toggleCursor: "m",
     changeView: "v",
 
+    toggleProjectorMode: "p",
+
     disableTimeout: "t",
 
     exitAircraft: "x",
@@ -782,6 +784,13 @@ document.addEventListener('keydown', function(event) {
             console.log('Cycling controls...')
             UIManager.cycleView();
             
+            break;
+
+        case keybinds.toggleProjectorMode:
+        case keybinds.toggleProjectorMode.toUpperCase():
+            console.log('Toggling projector mode...')
+            UIManager.toggleProjectorMode();
+
             break;
         
         case keybinds.disableTimeout:

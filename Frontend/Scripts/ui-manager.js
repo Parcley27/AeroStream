@@ -7,6 +7,7 @@ const UIManager = {
     maxViewStates: 3,
     cursorVisible: true,
     usingLabels: true,
+    projectorModeEnabled: false,
 
     init() {
         document.body.classList.add(`${this.getCurrentAppearance()}-mode`);
@@ -106,6 +107,21 @@ const UIManager = {
 
         currentTileLayer.addTo(map);
         this.usingLabels = !this.usingLabels;
+
+    },
+
+    toggleProjectorMode() {
+        this.projectorModeEnabled = !this.projectorModeEnabled;
+
+        if (this.projectorModeEnabled) {
+            document.body.classList.add('projector-overlay');
+            console.log(`Projector turned mode on for ${this.getCurrentAppearance}`);
+
+        } else {
+            document.body.classList.remove('projector-overlay');
+            console.log(`Projector mode turned off for ${this.getCurrentAppearance}`);
+
+        }
 
     }
     
