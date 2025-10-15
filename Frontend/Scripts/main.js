@@ -273,7 +273,7 @@ function initializeMap() {
     console.log('Map created successfully');
 
     // Show map controls
-    cycleView()
+    UIManager.cycleView()
 
 }
 

@@ -23,7 +23,7 @@ const UIManager = {
     cycleAppearance() {
         document.body.classList.remove(`${this.getCurrentAppearance()}-mode`);
 
-        (this.appearanceState + 1) % this.appearances.length
+        this.appearanceState = (this.appearanceState + 1) % this.appearances.length
 
         document.body.classList.add(`${this.getCurrentAppearance()}-mode`)
         
