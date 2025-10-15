@@ -60,7 +60,7 @@ const SessionManager = {
 };
 
 class SessionTimeout {
-    constructor(length = 60 * 60 * 1000) {
+    constructor(length = 60 * 60 * 1000) { // This one to change timeout length, currently 1 hour
         this.timeoutDuration = length;
         this.timeoutId = null;
         this.isTimedOut = false;
