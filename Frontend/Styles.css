@@ -97,13 +97,13 @@ body.colour-mode {
 
 /* Projector mode overlay */
 body.projector-overlay {
-    filter: contrast(2) brightness(1.2);
+    filter: contrast(1.5) brightness(1.2);
     
 }
 
 body.projector-overlay #map {
     zoom: 2.0;
-    transform-origin: top left;
+    transform-origin: center;
 
 }
 
