@@ -2,7 +2,7 @@
 
 const SessionManager = {
     seconds: 1000,
-    timeoutLength: 60 * 60 * this.seconds, // 1 hour
+    timeoutLength: 60 * 60 * 1000, // This one to change timeout length, currently 1 hour
     sessionTimeout: null,
 
     init() {
@@ -36,7 +36,7 @@ const SessionManager = {
     },
 
     resetTimer() {
-        // Delegate to the SessionTimeout instance
+        console.log('Resetting session timeout timer');
         this.sessionTimeout.resetTimer();
 
     },
@@ -49,7 +49,7 @@ const SessionManager = {
 };
 
 class SessionTimeout {
-    constructor(length = 60 * 60 * 1000) { // This one to change timeout length, currently 1 hour
+    constructor(length = 60 * 60 * 1000) { // Defaults to 1 hour if no input given
         this.timeoutDuration = length;
         this.timeoutId = null;
         this.isTimedOut = false;
