@@ -43,11 +43,11 @@ const keybinds = {
 
     toggleProjectorMode: "p",
 
-    disableTimeout: "t",
-
     exitAircraft: "x",
 
     exit: "Escape",
+
+    disableTimeout: "t",
 
     debug: "d"
 

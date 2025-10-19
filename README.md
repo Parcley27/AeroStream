@@ -40,15 +40,21 @@ Many thanks to [ADSB.lol](https://adsb.lol/) for live ATC data, as well as [Open
 
 -  **C** - Center map on your location
 
--  **R** - Reset map view to default zom and centering
+-  **R** - Reset map view to default zoom and centering
 
 -  **L** - Toggle map labels
 
--  **A** - Toggle dark/light mode
+-  **A** - Toggle light/colourfull/dark modes
 
--  **H** - Hide/show cursor
+-  **m** - Hide/show mouse
 
 -  **V** - Cycle through UI panels
+
+-  **P** - Toggle Projector mode
+
+-  **X/Escape** - Close/exit aircraft display panels
+
+-  **T** - Disable website timeout (Please be mindful of your resource usage; be nice to the kind folks at ADSB.lol)
 
 -  **D** - Debug mode (Functuality updates often, check the F12 menu in your browser for more info)
 
