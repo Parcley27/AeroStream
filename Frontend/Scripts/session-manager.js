@@ -6,7 +6,7 @@ const SessionManager = {
     sessionTimeout: null,
 
     init() {
-        this.sessionTimeout = new SessionTimeout(this.timeoutLenghth);
+        this.sessionTimeout = new SessionTimeout(this.timeoutLength);
         this.setupEventListeners();
         this.sessionTimeout.resetTimer();
 
