@@ -6,6 +6,8 @@ let defaultZoom = 9;
 
 let isProgrammedMove = false;
 
+let aircraftLayer;
+
 let openStreetMapTileLayer;
 let noLabelTileLayer;
 let currentTileLayer;
@@ -713,7 +715,7 @@ function centerMap() {
 function resetMap() {
     if (map && userLatitude && userLongitude) {
         deselectAircraft();
-        
+
         map.setView([userLatitude, userLongitude], defaultZoom)
 
         console.log('Map reset');
