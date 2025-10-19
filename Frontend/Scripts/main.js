@@ -700,6 +700,8 @@ function zoomOut() {
 
 function centerMap() {
     if (map && userLatitude && userLongitude) {
+        deselectAircraft();
+
         map.setView([userLatitude, userLongitude], map.getZoom())
 
         console.log('Map centered');
@@ -710,6 +712,8 @@ function centerMap() {
 
 function resetMap() {
     if (map && userLatitude && userLongitude) {
+        deselectAircraft();
+        
         map.setView([userLatitude, userLongitude], defaultZoom)
 
         console.log('Map reset');
