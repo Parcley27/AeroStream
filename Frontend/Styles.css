@@ -361,7 +361,7 @@ body.projector-overlay #map {
     transition: all 0.3s;
 
 }
-.light-mpde #aircraft-info-panel .close-button {
+.light-mode #aircraft-info-panel .close-button {
     border: 1px solid var(--light-border);
 
 }
@@ -537,7 +537,7 @@ body.projector-overlay #map {
 
 }
 .colour-mode #attribution-panel a {
-    color: var(--colour-seccondary);
+    color: var(--colour-secondary);
 
 }
 
