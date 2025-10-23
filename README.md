@@ -169,31 +169,31 @@ AeroStream uses the ADSB.lol API through a proxy server to avoid CORS issues.
 
 {
 
-"ac": [
+  "ac": [
 
-{
+    {
 
-"hex": "a1b2c3",
+    "hex": "a1b2c3",
 
-"flight": "WS123",
+    "flight": "WS123",
 
-"lat": 37.7749,
+    "lat": 37.7749,
 
-"lon": -122.4194,
+    "lon": -122.4194,
 
-"alt_baro": 35000,
+    "alt_baro": 35000,
 
-"gs": 450,
+    "gs": 450,
 
-"track": 270,
+    "track": 270,
 
-"squawk": "1200",
+    "squawk": "1200",
 
-"t": "B74S"
+    "t": "B74S"
 
-}
+    }
 
-]
+  ]
 
 }
 
@@ -234,3 +234,4 @@ If you encounter any issues or have questions, please:
 -  **[nginx](https://www.f5.com/go/product/welcome-to-nginx)** -- Server hosting software
 -  **[Node.js](https://nodejs.org/)** - JavaScript runtime for the proxy server software
 -  **[Let's Encrypt and the ISRG](https://letsencrypt.org/)** -- Free and auto-renewing SSL certificates
+-  **[Rastapasta](https://github.com/rastapasta/mapscii)** -- Proxy server map display inspo
