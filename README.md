@@ -203,6 +203,10 @@ AeroStream uses the ADSB.lol API through a proxy server to avoid CORS issues.
 
 Units are those typically used by the aviation industry, like knots for speed and feet for altitude. The actual response usually contain more/varied information; this is just what is used by the website at the moment.
 
+## Privacy
+
+AeroStream is designed with privacy in mind; No personal information is collected, stored, or tracked. A full privacy policy is available [here](https://github.com/Parcley27/AeroStream/blob/main/PRIVACY.md)
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request; for major changes, please open an issue first to discuss what you would like to change, otherwise you can fork and host it yourself.
