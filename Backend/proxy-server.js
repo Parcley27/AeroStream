@@ -69,7 +69,7 @@ function generateASCIIMap() {
                 if (count > 50) dot = '@';
                 if (count > 100) dot = '#';
 
-                line += '\x1b[36m.\x1b[37m'; // Cyan
+                line += '\x1b[36m' + dot + '\x1b[37m'; // Cyan
 
             } else {
                 line += map[y][x];
@@ -198,7 +198,7 @@ function renderDashboard() {
 
     const stats = getStats();
 
-    const HEADER_WIDTH = 68;
+    const HEADER_WIDTH = 80;
 
     const headerText = 'AeroStream Proxy Server Dashboard';
     const headerPadding = Math.floor((HEADER_WIDTH - headerText.length) / 2);
@@ -263,7 +263,7 @@ function renderDashboard() {
 
     }
 
-    console.log('\n\x1b[90mLast updated: ' + new Date().toLocaleString() + '\x1b[0m');
+    console.log('\n\x1b[90m Last updated: ' + new Date().toLocaleString() + '\x1b[0m');
 
 }
 
