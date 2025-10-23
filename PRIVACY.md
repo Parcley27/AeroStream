@@ -1,7 +1,5 @@
 # Privacy Policy
 
-Last Updated: October 22, 2025
-
 AeroStream is designed with privacy in mind; No personal information is collected, stored, or tracked.
 
 ## Information Used
