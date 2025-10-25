@@ -76,7 +76,7 @@ body {
 
 }
 
-/* Dark (default)/light mode */
+/* Light/Dark/Colour modes */
 body.dark-mode {
     background-color: var(--dark-background);
     color: var(--dark-text);
