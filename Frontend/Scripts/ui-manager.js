@@ -1,7 +1,7 @@
 // UI and appearance
 
 const UIManager = {
-    appearances: ['light', 'colour', 'dark'], // light -> colour -> dark
+    appearances: ['colour', 'light', 'dark'], // colour -> light -> dark
     appearanceState: 0,
     viewState: 0,
     maxViewStates: 3,

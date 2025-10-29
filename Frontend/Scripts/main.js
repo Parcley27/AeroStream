@@ -2,7 +2,7 @@ let publicHost = true; // Change this line to "false" if hosting your own proxy 
 
 let map;
 let userLatitude, userLongitude;
-let defaultZoom = 9;
+let defaultZoom = 8;
 
 let isProgrammedMove = false;
 
