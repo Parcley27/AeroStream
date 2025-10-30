@@ -26,38 +26,12 @@ let lastUpdateTime;
 let timeoutLength = 60 * 60 * seconds; // 1 hour
 // let timeoutLength = 5 * seconds; // debug
 
-const keybinds = {
-    zoomIn: "+",
-    zoomInSecondary: "=",
-    zoomOut: "-",
-    zoomOutSecondary: "_",
-
-    centerMap: "c",
-    resetMap: "r",
-
-    toggleLabels: "l",
-    cycleAppearance: "a",
-
-    toggleCursor: "m",
-    changeView: "v",
-
-    toggleProjectorMode: "p",
-
-    exitAircraft: "x",
-
-    exit: "Escape",
-
-    disableTimeout: "t",
-
-    debug: "d"
-
-}
-
 // Run startup methods
 window.onload = function() {
     // Startup aux scripts
     SessionManager.init();
     UIManager.init();
+    keyboardHandler.init();
 
     // Start location request
     requestLocation();
@@ -732,111 +706,6 @@ function exitState() {
 
     }
 }
-
-// Keyboard shorcuts
-document.addEventListener('keydown', function(event) {
-    switch(event.key) {
-        case keybinds.zoomIn:
-        case keybinds.zoomInSecondary:
-            console.log('Zooming in...');
-            zoomIn();
-
-            break
-        
-        case keybinds.zoomOut:
-        case keybinds.zoomOutSecondary:
-            console.log('Zooming out...');
-            zoomOut();
-
-            break;
-
-        case keybinds.centerMap:
-        case keybinds.centerMap.toUpperCase():
-            console.log('Centering map...');
-            centerMap();
-
-            break;
-        
-        case keybinds.resetMap:
-        case keybinds.resetMap.toUpperCase():
-            console.log('Resetting map...');
-            resetMap();
-            
-            break;
-        
-        case keybinds.toggleLabels:
-        case keybinds.toggleLabels.toUpperCase():
-            console.log('Toggling map labels...');
-            UIManager.toggleMapLabels();
-
-            break;
-
-        case keybinds.toggleCursor:
-        case keybinds.toggleCursor.toUpperCase():
-            console.log('Toggling cursor...');
-            UIManager.toggleCursor();
-
-            break;
-        
-        case keybinds.cycleAppearance:
-        case keybinds.cycleAppearance.toUpperCase():
-            console.log('Cycling appearance...');
-            UIManager.cycleAppearance();
-
-            break;
-        
-        case keybinds.changeView:
-        case keybinds.changeView.toUpperCase():
-            console.log('Cycling controls...')
-            UIManager.cycleView();
-            
-            break;
-
-        case keybinds.toggleProjectorMode:
-        case keybinds.toggleProjectorMode.toUpperCase():
-            console.log('Toggling projector mode...')
-            UIManager.toggleProjectorMode();
-
-            break;
-        
-        case keybinds.disableTimeout:
-        case keybinds.disableTimeout.toUpperCase():
-            console.log('Stopping session timeout...')
-            SessionManager.stopTimeout();
-
-            break;
-
-        case keybinds.exitAircraft:
-        case keybinds.exitAircraft.toUpperCase():
-            console.log('Deselecting aircraft...')
-            deselectAircraft();
-
-            break;
-        
-        case keybinds.exit:
-            console.log('Escaping current state...');
-            exitState();
-
-            break;
-        
-        case keybinds.debug:
-        case keybinds.debug.toUpperCase():
-            console.log('Running debug');
-
-            if (updateInterval) {
-                clearInterval(updateInterval);
-                console.log('Refresh timer stopped');
-                
-            } else {
-                restartUpdateTimer(true);
-                console.log('Refresh timer started');
-
-            }
-
-            break;
-
-    }
-});
 
 // Clean up on page unload
 window.addEventListener('beforeunload', () => {
