@@ -31,7 +31,7 @@ window.onload = function() {
     // Startup aux scripts
     SessionManager.init();
     UIManager.init();
-    keyboardHandler.init();
+    KeyboardHandler.init();
 
     // Start location request
     requestLocation();

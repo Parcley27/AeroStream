@@ -1,4 +1,4 @@
-const keyboardHandler = {
+const KeyboardHandler = {
     keybinds: {
         zoomIn: "+",
         zoomInSecondary: "=",
