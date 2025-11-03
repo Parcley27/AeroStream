@@ -1,7 +1,6 @@
 // Session timeouts
 
 const SessionManager = {
-    seconds: 1000,
     timeoutLength: 60 * 60 * 1000, // This one to change timeout length, currently 1 hour
     sessionTimeout: null,
 
@@ -9,44 +8,27 @@ const SessionManager = {
         this.sessionTimeout = new SessionTimeout(this.timeoutLength);
         this.setupEventListeners();
         this.sessionTimeout.resetTimer();
-
         console.log("Session Manager initiated");
-
     },
 
     setupEventListeners() {
-        document.addEventListener('click', (event) =>{
+        const resetIfNoSelection = () => {
             if (!selectedAircraft) {
                 this.sessionTimeout.resetTimer();
 
             }
-        });
+        };
+
+        document.addEventListener('click', resetIfNoSelection);
 
         document.addEventListener('keydown', (event) => {
-            if (event.key === 't' || event.key === 'T') {
-                return;
-
-            }
-
-            if (!selectedAircraft) {
-                this.sessionTimeout.resetTimer();
+            if (event.key.toLowerCase() !== 't') {
+                resetIfNoSelection();
 
             }
         });
-    },
-
-    resetTimer() {
-        console.log('Resetting session timeout timer');
-        this.sessionTimeout.resetTimer();
-
-    },
-
-    stopTimeout() {
-        console.log('Stopping session timeout');
-        this.sessionTimeout.stopTimeout();
-        
     }
-};
+}
 
 class SessionTimeout {
     constructor(length = 60 * 60 * 1000) { // Defaults to 1 hour if no input given
@@ -96,7 +78,7 @@ class SessionTimeout {
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
             this.timeoutId = null;
-
+            
         }
 
         console.log('Session timeout stopped');
