@@ -46,7 +46,7 @@ Many thanks to [ADSB.lol](https://adsb.lol/) for live ATC data, as well as [Open
 
 -  **A** - Toggle light/colourfull/dark modes
 
--  **m** - Hide/show mouse
+-  **M** - Hide/show mouse
 
 -  **V** - Cycle through UI panels
 
