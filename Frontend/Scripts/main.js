@@ -100,7 +100,7 @@ function handleMapClick(e) {
 }
 
 // ADSB.lol API integration
-async function fetchAircraftData(centerLatitude = MapController.getCenter().lat, centerLongitude = MapController.getCenter().lng, searchRadius = MapController.getMapRadius()) {
+async function fetchAircraftData(centerLatitude = MapController.getCenter().latitude, centerLongitude = MapController.getCenter().longitude, searchRadius = MapController.getMapRadius()) {
     isProgrammedMove = true;
 
     try {
