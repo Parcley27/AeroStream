@@ -89,23 +89,24 @@ const UIManager = {
     },
 
     toggleMapLabels() {
+        const map = MapController.getMap();
         if (!map) return;
 
-        map.removeLayer(currentTileLayer);
+        map.removeLayer(MapController.currentTileLayer());
 
         if (this.usingLabels) {
-            currentTileLayer = noLabelTileLayer;
+            MapController.setCurrentTileLayer(MapController.getUnlabeledTileLayer());
 
             console.log('Switched to no label map');
 
         } else {
-            currentTileLayer = openStreetMapTileLayer;
+            MapController.setCurrentTileLayer(MapController.getLabeledTileLayer());
             
             console.log('Switched to labeled OpenStreetMap');
 
         }
 
-        currentTileLayer.addTo(map);
+        MapController.getCurrentTileLayer().addTo(map);
         this.usingLabels = !this.usingLabels;
 
     },

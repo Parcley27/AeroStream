@@ -46,28 +46,28 @@ const KeyboardHandler = {
                 case this.keybinds.zoomIn:
                 case this.keybinds.zoomInSecondary:
                     console.log('Zooming in...');
-                    zoomIn();
+                    MapController.zoomIn();
 
                     break
                 
                 case this.keybinds.zoomOut:
                 case this.keybinds.zoomOutSecondary:
                     console.log('Zooming out...');
-                    zoomOut();
+                    MapController.zoomOut();
 
                     break;
 
                 case this.keybinds.centerMap:
                 case this.keybinds.centerMap.toUpperCase():
                     console.log('Centering map...');
-                    centerMap();
+                    MapController.centerMap();
 
                     break;
                 
                 case this.keybinds.resetMap:
                 case this.keybinds.resetMap.toUpperCase():
                     console.log('Resetting map...');
-                    resetMap();
+                    MapController.resetMap();
                     
                     break;
                 

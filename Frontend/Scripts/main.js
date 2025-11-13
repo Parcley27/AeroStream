@@ -1,16 +1,6 @@
 let publicHost = true; // Change this line to "false" if hosting your own proxy server
 
-let map;
-let userLatitude, userLongitude;
-let defaultZoom = 8;
-
-let isProgrammedMove = false;
-
 let aircraftLayer;
-
-let openStreetMapTileLayer;
-let noLabelTileLayer;
-let currentTileLayer;
 
 let selectedAircraft;
 let aircraftMarkers = new Map(); // Store markers by aircraft hex
@@ -32,259 +22,17 @@ window.onload = function() {
     SessionManager.init();
     UIManager.init();
     KeyboardHandler.init();
+    MapController.init();
 
     // Start location request
-    requestLocation();
+    MapController.requestLocation();
 
 };
-
-// Startup
-function requestLocation() {
-    console.log('Requesting location...');
-
-    // Show loading screen
-    document.getElementById('loading-screen').style.display = 'block';
-    document.getElementById('coordinate-prompt').style.display = 'none';
-
-    // Check if location is supported by browser
-    if (!navigator.geolocation) {
-        console.log('Location not supported');
-        showCoordinatePrompt('Auto location is not supported by your browser');
-
-        return;
-
-    }
-
-    // Request user location
-    navigator.geolocation.getCurrentPosition(
-        // Success
-        function(position) {
-            console.log('Location found:', position.coords.latitude, position.coords.longitude);
-            
-            userLatitude = position.coords.latitude;
-            userLongitude = position.coords.longitude;
-
-            document.getElementById('loading-screen').style.display = 'none';
-
-            initializeMap();
-
-        },
-
-        // Error
-        function(error) {
-            let errorMessage;
-
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    errorMessage = 'Location permission denied';
-
-                    break;
-
-                case error.POSITION_UNAVAILABLE:
-                    errorMessage = 'Location information unavailable';
-
-                    break;
-
-                case error.TIMEOUT:
-                    errorMessage = 'Location request timed out';
-
-                    break;
-
-                case error.UNKNOWN_ERROR:
-                default:
-                    errorMessage = 'Unknown error';
-
-                    break;
-
-            }
-
-            console.log('Error getting location:', errorMessage);
-            showCoordinatePrompt(errorMessage);
-
-        },
-
-        // Location options
-        {
-            enableHighAccuracy: true,
-            timeout: 10000, // 10 seconds
-            maximumAge: 300000 // Refresh every 5 minutes
-
-        }
-    );
-}
-
-function showCoordinatePrompt(reason) {
-    // Hide other screens
-    document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('coordinate-prompt').style.display = 'block';
-
-    const reasonElement = document.querySelector('#coordinate-prompt p');
-    
-    if (reasonElement) {
-        reasonElement.textContent = reason;
-
-    }
-}
-
-function setCoordinates() {
-    console.log('Setting coordinates...');
-
-    const latitude = parseFloat(document.getElementById('latitude-input').value);
-    const longitude = parseFloat(document.getElementById('longitude-input').value);
-
-    // Check for valid coordinates
-    if (isNaN(latitude) || isNaN(longitude) || latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
-        alert('Invalid coordinates. Please enter valid latitude and longitude values (Between -90 and 90).');
-        
-        return;
-
-    }
-
-    userLatitude = latitude;
-    userLongitude = longitude;
-
-    // Hide prompt and show map
-    document.getElementById('coordinate-prompt').style.display = 'none';
-    initializeMap();
-
-    console.log('Coordinates set');
-
-}
-
-// Initialize map
-function initializeMap() {
-    console.log('Loading map at:', userLatitude, userLongitude);
-
-    // Create a map centered on user location
-    map = L.map('map', {
-        center: [userLatitude, userLongitude],
-        zoom: defaultZoom,
-        attributionControl: false,
-        zoomControl: false
-
-    });
-    
-    // OpenStreetMap layer
-    openStreetMapTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 15,
-        minZoom: 3
-
-    });
-
-    // No label map layer
-    noLabelTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-        maxZoom: 20,
-        minZoom: 3
-
-    });
-
-    currentTileLayer = openStreetMapTileLayer;
-    currentTileLayer.addTo(map);
-
-    // Location marker
-    L.circleMarker([userLatitude, userLongitude], {
-        radius: 6,
-        weight: 2,
-        color: 'var(--general-accent)',
-        fillColor: 'rgba(0, 0, 0, 0)'
-
-    })
-    .addTo(map);
-    
-    // Refresh data on map move
-    map.on('moveend', function() {
-        console.log('Map moved');
-        // console.log(`Zoom: ${map.getZoom()}, Center: ${map.getCenter().lat.toFixed(4)}, ${map.getCenter().lng.toFixed(4)}`);
-
-        if (isProgrammedMove) {
-            console.log('Data refresh locked, skipping update');
-
-            return;
-
-        }
-
-        console.log('Updating aircraft data for new map zone')
-
-        const center = map.getCenter();
-
-        if (isUpdateAllowed()) {
-            fetchAircraftData(center.lat, center.lng)
-
-        }
-
-    });
-
-    map.on('zoomend', function() {
-        console.log('Map zoomed');
-
-        if (isProgrammedMove) {
-            console.log('Data refresh locked, skipping update');
-
-            return;
-
-        }
-
-        console.log('Map zoomed, updating aircraft data and refresh frequency');
-
-        const center = map.getCenter();
-
-        if (isUpdateAllowed()) {
-            fetchAircraftData(center.lat, center.lng)
-
-        }
-        
-        restartUpdateTimer();
-        
-    });
-
-    map.on('click', handleMapClick);
-
-    // Create layer for aircraft markers
-    aircraftLayer = L.layerGroup().addTo(map);
-
-    // Fetch initial set of data
-    fetchAircraftData(userLatitude, userLongitude);
-
-    // Start update loop (10s)
-    updateInterval = setInterval(fetchAircraftData, updateFrequency);
-
-    console.log('Map created successfully');
-
-    // Show map controls
-    UIManager.cycleView()
-
-}
-
-function mapRadius() { // Nautical Miles
-    if (!map) return 75;
-
-    const bounds = map.getBounds();
-    const center = map.getCenter();
-    
-    const northEast = bounds.getNorthEast();
-    const southWest = bounds.getSouthWest();
-    
-    const distanceToNE = center.distanceTo(northEast);
-    const distanceToSW = center.distanceTo(southWest);
-    const distanceToNW = center.distanceTo(L.latLng(northEast.lat, southWest.lng));
-    const distanceToSE = center.distanceTo(L.latLng(southWest.lat, northEast.lng));
-    
-    const maxDistanceMeters = Math.max(distanceToNE, distanceToSW, distanceToNW, distanceToSE);
-    
-    const radiusNM = maxDistanceMeters / 1852;
-    
-    // Add buffer to help with warping at higher lattitudes
-    const bufferedRadius = Math.min(radiusNM * 1.1, 250);
-    
-    // ADSB.lol prefers int radius values
-    return Math.round(bufferedRadius);
-
-}
 
 function calculateUpdateFrequency() {
     if (!map) return 5 * seconds;
     
-    const radius = mapRadius();
+    const radius = MapController.getMapRadius();
     
     if (radius > 200) {
         return 7.5 * seconds;
@@ -352,7 +100,7 @@ function handleMapClick(e) {
 }
 
 // ADSB.lol API integration
-async function fetchAircraftData(centerLatitude = map.getCenter().lat, centerLongitude = map.getCenter().lng, searchRadius = mapRadius()) {
+async function fetchAircraftData(centerLatitude = MapController.getCenter().lat, centerLongitude = MapController.getCenter().lng, searchRadius = MapController.getMapRadius()) {
     isProgrammedMove = true;
 
     try {
@@ -650,51 +398,6 @@ function updateAircraftPanel(aircraft) {
     //     : latestUpdate < 5
     //         ? '< 5 seconds ago'
     //         : Math.floor(latestUpdate) + ' seconds ago';
-
-}
-
-// Map controls
-function zoomIn() {
-    if (map) {
-        map.zoomIn()
-
-        console.log('Zoomed in');
-
-    } else { console.log('Zoom in error'); }
-
-}
-
-function zoomOut() {
-    if (map) {
-        map.zoomOut()
-
-        console.log('Zoomed out');
-
-    } else { console.log('Zoom out error'); }
-
-}
-
-function centerMap() {
-    if (map && userLatitude && userLongitude) {
-        deselectAircraft();
-
-        map.setView([userLatitude, userLongitude], map.getZoom())
-
-        console.log('Map centered');
-
-    } else { console.log('Map centering error'); }
-
-}
-
-function resetMap() {
-    if (map && userLatitude && userLongitude) {
-        deselectAircraft();
-
-        map.setView([userLatitude, userLongitude], defaultZoom)
-
-        console.log('Map reset');
-
-    } else { console.log('Map reset error'); }
 
 }
 
