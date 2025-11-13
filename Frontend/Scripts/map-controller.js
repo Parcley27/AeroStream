@@ -183,6 +183,9 @@ const MapController = {
         this.currentTileLayer = this.labeledMapTileLayer;
         this.currentTileLayer.addTo(this.map);
 
+        // Initialize aircraft layer
+        aircraftLayer = L.layerGroup().addTo(this.map);
+
         this.setupMapEvents();
 
         fetchAircraftData();
