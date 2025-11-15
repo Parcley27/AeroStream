@@ -71,7 +71,7 @@ const MapController = {
 
                     case error.UNKNOWN_ERROR:
                     default:
-                        errorMessage = 'Unknown error';
+                        errorMessage = 'Unknown location error';
 
                         break;
 
@@ -158,14 +158,32 @@ const MapController = {
     initializeMap() {
         console.log('Loading map at: ', this.userLatitude, this.userLongitude);
 
-        // Create map
-        this.map = L.map('map', {
-            center: [this.userLatitude, this.userLongitude],
-            zoom: this.defaultZoom,
-            attributionControl: false,
-            zoomControl: false
+        // Check if map already exists
+        if (this.map) {
+            console.log('Map already initialized, updating view and settings...');
+            this.map.setView([this.userLatitude, this.userLongitude], this.defaultZoom);
 
-        });
+            // Update map settings
+            if (this.map.attributionControl) {
+                this.map.removeControl(this.map.attributionControl);
+
+            }
+
+            if (this.map.zoomControl) {
+                this.map.removeControl(this.map.zoomControl);
+
+            }
+            
+        } else {
+            // Create map
+            this.map = L.map('map', {
+                center: [this.userLatitude, this.userLongitude],
+                zoom: this.defaultZoom,
+                attributionControl: false,
+                zoomControl: false
+
+            });
+        }
 
         // Labeled Map Layer - OpenStreetMap
         this.labeledMapTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -191,8 +209,8 @@ const MapController = {
         fetchAircraftData();
 
         console.log("Map initialzed successfully!");
-        
-        UIManager.cycleView();        
+
+        UIManager.cycleView();
 
     },
 
