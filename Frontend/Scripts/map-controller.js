@@ -42,7 +42,7 @@ const MapController = {
                 console.log('Location found: ', position.coords.latitude, position.coords.longitude);
 
                 this.userLatitude = position.coords.latitude;
-                this.userLogitude = position.coords.longitude;
+                this.userLongitude = position.coords.longitude;
 
                 document.getElementById('loading-screen').style.display = 'none';
 
