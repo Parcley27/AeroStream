@@ -7,8 +7,6 @@ const MapController = {
     userLatitude: null,
     userLongitude: null,
 
-    isProgrammedMove: false,
-
     labeledMapTileLayer: null,
     unlabeledMapTileLayer: null,
     currentTileLayer: null,
@@ -220,7 +218,6 @@ const MapController = {
 
             if (this.isProgrammedMove) {
                 console.log("Data refresh locked, skipping update");
-                this.isProgrammedMove = false;
 
                 return;
 
@@ -238,7 +235,6 @@ const MapController = {
 
             if (this.isProgrammedMove) {
                 console.log("Data refresh locked, skipping update");
-                this.isProgrammedMove = false;
 
                 return;
 
@@ -279,6 +275,15 @@ const MapController = {
 
         } else {
             console.log("Zoom out error");
+
+        }
+    },
+
+    panTo(latitude, longitude) {
+        if (this.map) {
+            this.map.setView([latitude, longitude], this.map.getZoom());
+
+            console.log("Map panned to coordinates: ", latitude, longitude);
 
         }
     },

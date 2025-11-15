@@ -16,6 +16,8 @@ let lastUpdateTime;
 let timeoutLength = 60 * 60 * seconds; // 1 hour
 // let timeoutLength = 5 * seconds; // debug
 
+let isProgrammedMove = false;
+
 // Run startup methods
 window.onload = function() {
     // Startup aux scripts
@@ -102,9 +104,17 @@ function handleMapClick(e) {
 // ADSB.lol API integration
 async function fetchAircraftData(centerLatitude = MapController.getCenter().latitude, centerLongitude = MapController.getCenter().longitude, searchRadius = MapController.getMapRadius()) {
     isProgrammedMove = true;
+    
+    if (!isUpdateAllowed()) {
+        console.log('Update skipped, time since last is under minimum of ' + (calculateUpdateFrequency() / 1000) + 's ago)');
+        
+        return;
+
+    }
 
     try {
         // console.log('Fetching aircraft data around center:', {centerLatitude, centerLongitude}, `with ${searchRadius}nm radius`);
+        lastUpdateTime = Date.now();
         
         let currentUrl = window.location.href;
         
@@ -137,7 +147,7 @@ async function fetchAircraftData(centerLatitude = MapController.getCenter().lati
         updateAircraftDisplay(data.ac || []);
 
         if (selectedAircraft) {
-            map.panTo([selectedAircraft.lat, selectedAircraft.lon]);
+            MapController.panTo(selectedAircraft.lat, selectedAircraft.lon);
 
         }
 
@@ -323,7 +333,7 @@ function selectAircraft(aircraft) {
 
     openAircraftPanel(aircraft);
 
-    map.panTo([aircraft.lat, aircraft.lon])
+    MapController.panTo(aircraft.lat, aircraft.lon);
 
     console.log('Selected aircraft:', aircraft.flight?.trim() || aircraft.r || 'N/A');
 
