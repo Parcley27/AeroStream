@@ -1,21 +1,20 @@
 // Session timeouts
 
 const SessionManager = {
-    timeoutLength: 60 * 60 * 1000, // This one to change timeout length, currently 1 hour
-    sessionTimeout: null,
+    timeoutDuration: 60 * 60 * 1000, // This one to change timeout length, currently 1 hour
+    timeoutId: null,
+    isTimedOut: false,
 
     init() {
-        this.sessionTimeout = new SessionTimeout(this.timeoutLength);
         this.setupEventListeners();
-        this.sessionTimeout.resetTimer();
+        this.resetTimer();
         console.log("Session Manager initiated");
     },
 
     setupEventListeners() {
         const resetIfNoSelection = () => {
             if (!selectedAircraft) {
-                this.sessionTimeout.resetTimer();
-
+                this.resetTimer();
             }
         };
 
@@ -24,36 +23,23 @@ const SessionManager = {
         document.addEventListener('keydown', (event) => {
             if (event.key.toLowerCase() !== 't') {
                 resetIfNoSelection();
-
             }
         });
-    }
-}
-
-class SessionTimeout {
-    constructor(length = 60 * 60 * 1000) { // Defaults to 1 hour if no input given
-        this.timeoutDuration = length;
-        this.timeoutId = null;
-        this.isTimedOut = false;
-
-    }
+    },
 
     resetTimer() {
         if (this.isTimedOut) return;
 
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
-
         }
 
         this.timeoutId = setTimeout(() => {
             this.timeoutSession();
-
         }, this.timeoutDuration);
 
         console.log('Session timer reset');
-
-    }
+    },
 
     timeoutSession() {
         this.isTimedOut = true;
@@ -61,7 +47,6 @@ class SessionTimeout {
         // Update global vars from main.js
         if (updateInterval) {
             clearInterval(updateInterval);
-
         }
 
         const timeoutDialog = document.getElementById('timeout-dialog');
@@ -71,17 +56,14 @@ class SessionTimeout {
         fullscreenCover.style.display = 'block';
 
         console.log('Session timed out');
-
-    }
+    },
 
     stopTimeout() {
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
             this.timeoutId = null;
-            
         }
 
         console.log('Session timeout stopped');
-
     }
 }
