@@ -145,7 +145,7 @@ body.projector-overlay #map {
     background: var(--dark-popup-solid);
     color: var(--dark-text);
     padding: 30px;
-    border-radius: 5px;
+    border-radius: 8px;
     border: 1px solid var(--dark-border);
     z-index: 2000;
     text-align: center;
@@ -174,7 +174,7 @@ body.projector-overlay #map {
     background: var(--dark-popup-solid);
     color: var(--dark-text);
     padding: 30px;
-    border-radius: 5px;
+    border-radius: 16px;
     border: 1px solid var(--dark-border);;
     z-index: 2000;
     display: none;
@@ -211,6 +211,7 @@ body.projector-overlay #map {
     background: var(--dark-background);
     color: var(--dark-text);
     border: 1px solid var(--dark-border);
+    border-radius: 4px;
     padding: 8px;
     margin: 5px;
     font-family: 'Courier New';
@@ -311,7 +312,7 @@ body.projector-overlay #map {
     color: var(--dark-text);
     border: 1px solid var(--dark-border);
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 16px;
     z-index: 1000;
     display: none;
     transition: all 0.3s ease;
@@ -356,7 +357,7 @@ body.projector-overlay #map {
     color: var(--dark-text);
     cursor: pointer;
     padding: 4px 8px;
-    border-radius: 3px;
+    border-radius: 4px;
     font-size: 12px;
     transition: all 0.3s;
 
@@ -413,7 +414,7 @@ body.projector-overlay #map {
     background: var(--dark-popup);
     color: var(--dark-text);
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 8px;
     border: 1px solid var(--dark-border);
     z-index: 1000;
     display: none;
@@ -448,6 +449,7 @@ body.projector-overlay #map {
     background: var(--dark-background);
     color: var(--dark-text);
     border: 1px solid var(--dark-border);
+    border-radius: 4px;
     cursor: pointer;
     font-size: 12px;
     transition: all 0.3s ease;
@@ -502,7 +504,7 @@ body.projector-overlay #map {
     background: var(--dark-popup);
     color: var(--dark-text);
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 8px;
     border: 1px solid var(--dark-border);
     z-index: 1000;
     display: none;
@@ -555,7 +557,7 @@ body.projector-overlay #map {
     background: var(--dark-popup-solid);
     color: var(--dark-text);
     padding: 30px;
-    border-radius: 5px;
+    border-radius: 8px;
     border: 1px solid var(--dark-border);
     z-index: 2000;
     text-align: center;
