@@ -235,6 +235,7 @@ body.projector-overlay #map {
     background: var(--dark-tertiary);
     color: var(--dark-text);
     border: 1px solid var(--dark-border);
+    border-radius: 4px;
     padding: 10px 20px;
     margin-top: 15px;
     cursor: pointer;
@@ -309,6 +310,8 @@ body.projector-overlay #map {
     left: 20px;
     width: 280px;
     background: var(--dark-popup);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     color: var(--dark-text);
     border: 1px solid var(--dark-border);
     padding: 20px;
@@ -412,6 +415,8 @@ body.projector-overlay #map {
     top: 20px;
     right: 20px;
     background: var(--dark-popup);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     color: var(--dark-text);
     padding: 10px;
     border-radius: 8px;
@@ -502,6 +507,8 @@ body.projector-overlay #map {
     bottom: 20px;
     right: 20px;
     background: var(--dark-popup);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     color: var(--dark-text);
     padding: 15px;
     border-radius: 8px;
