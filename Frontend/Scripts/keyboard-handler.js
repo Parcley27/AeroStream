@@ -74,7 +74,7 @@ const KeyboardHandler = {
                 case this.keybinds.toggleLabels:
                 case this.keybinds.toggleLabels.toUpperCase():
                     console.log('Toggling map labels...');
-                    UIManager.toggleMapLabels();
+                    MapController.toggleMapLabels();
 
                     break;
 

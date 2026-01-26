@@ -1,3 +1,5 @@
+// Note to self: try https://cesium.com/platform/cesiumjs/
+
 const MapController = {
     // Map state vars
     map: null,
@@ -202,6 +204,9 @@ const MapController = {
         // Initialize aircraft layer
         aircraftLayer = L.layerGroup().addTo(this.map);
 
+        // Add scale
+        L.control.scale().addTo(this.map);
+
         this.setupMapEvents();
 
         fetchAircraftData();
@@ -381,5 +386,21 @@ const MapController = {
     setCurrentTileLayer(layer) {
         this.currentTileLayer = layer;
     
-    }    
+    },
+
+    toggleMapLabels() {
+        this.currentTileLayer.removeFrom(this.map);
+
+        if (this.currentTileLayer === this.labeledMapTileLayer) {
+            this.currentTileLayer = this.unlabeledMapTileLayer;
+
+        
+        } else {
+            this.currentTileLayer = this.labeledMapTileLayer;
+
+        }
+
+        this.currentTileLayer.addTo(this.map);
+        
+    }
 }

@@ -64,13 +64,13 @@
     <!-- Controls display -->
     <div id = "controls-display">
         <div class="zoom-buttons">
-            <button onclick = "zoomOut()">Zoom Out (-)</button>
-            <button onclick = "zoomIn()">Zoom In (+)</button>
+            <button onclick = "MapController.zoomOut()">Zoom Out (-)</button>
+            <button onclick = "MapController.zoomIn()">Zoom In (+)</button>
         </div>
 
-        <button onclick = "centerMap()">Center Map (C)</button>
-        <button onclick = "resetMap()">Reset View (R)</button>
-        <button onclick = "toggleMapLabels()">Toggle Map Labels (L)</button>
+        <button onclick = "MapController.centerMap()">Center Map (C)</button>
+        <button onclick = "MapController.resetMap()">Reset View (R)</button>
+        <button onclick = "MapController.toggleMapLabels()">Toggle Map Labels (L)</button>
         <button onclick = "UIManager.cycleAppearance()">Cycle Appearance (A)</button>
 
         <span>  </span>
@@ -217,6 +217,7 @@
     <script src = "Scripts/ui-manager.js"></script>
     <script src = "Scripts/keyboard-handler.js"></script>
     <script src = "Scripts/map-controller.js"></script>
+    <script src = "Scripts/aircraft-manager.js"></script>
 
     <script src = "Scripts/main.js"></script>
 
