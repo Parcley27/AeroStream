@@ -3,7 +3,7 @@
 const UIManager = {
     appearances: ['colour', 'light', 'dark'], // colour -> light -> dark
     appearanceState: 0,
-    viewState: 0,
+    viewState: -1,
     maxViewStates: 3,
     cursorVisible: true,
     usingLabels: true,
@@ -65,7 +65,7 @@ const UIManager = {
 
         }
 
-        console.log(`Switched to viewstate ${this.viewState}`);
+        console.log(`Switched to viewstate ${(this.viewState % this.maxViewStates)}`);
 
         this.viewState += 1;
 
