@@ -205,7 +205,7 @@ Units are those typically used by the aviation industry, like knots for speed an
 
 ## Privacy
 
-AeroStream is designed with privacy in mind; No personal information is collected, stored, or tracked. A full privacy policy is available [here](https://github.com/Parcley27/AeroStream/blob/main/PRIVACY.md)
+AeroStream is designed with privacy in mind; No personal information is collected, stored, or tracked. A full privacy policy is available [here](https://github.com/Parcley27/AeroStream/blob/main/PRIVACY.md).
 
 ## Contributing
 
@@ -231,7 +231,7 @@ If you encounter any issues or have questions, please:
 -  **[Leaflet](https://leafletjs.com/)** - Interactive maps and easy implementation of custom tiles
 -  **[OpenStreetMap](https://www.openstreetmap.org/)** - Open source mapping data and labled map tiles
 -  **[Carto](https://carto.com/basemaps)** - Clean basemap tiles
--  **[nginx](https://www.f5.com/go/product/welcome-to-nginx)** -- Server hosting software
+-  **[nginx](https://www.f5.com/go/product/welcome-to-nginx)** - Server hosting software
 -  **[Node.js](https://nodejs.org/)** - JavaScript runtime for the proxy server software
--  **[Let's Encrypt and the ISRG](https://letsencrypt.org/)** -- Free and auto-renewing SSL certificates
--  **[Rastapasta](https://github.com/rastapasta/mapscii)** -- Proxy server map display inspo
+-  **[Let's Encrypt and the ISRG](https://letsencrypt.org/)** - Free and auto-renewing SSL certificates
+-  **[Rastapasta](https://github.com/rastapasta/mapscii)** - Proxy server map display inspo
