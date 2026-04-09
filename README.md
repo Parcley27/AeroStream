@@ -215,13 +215,13 @@ This project is open source and available under the [MIT License](https://claude
 
 ## Support
 
-If you encounter any issues or have questions, please:
+If you encounter any issues or have questions, please
 
-1. Check the [Issues](https://github.com/Parcley27/AeroStream/issues) page
+1. Check the [Issues](https://github.com/Parcley27/AeroStream/issues) page,
 
-2. Create a new issue with detailed information about your problem
+2. Create a new issue with detailed information about your problem,
 
-3. Include your browser, operating system, and any error messages
+3. Include your browser, operating system, and any error messages, and
 
 4. If you think it's something urgent that I should know about, email me at [pierceoxley@icloud.com](mailto:pierceoxley@icloud.com)
 
@@ -235,3 +235,5 @@ If you encounter any issues or have questions, please:
 -  **[Node.js](https://nodejs.org/)** - JavaScript runtime for the proxy server software
 -  **[Let's Encrypt and the ISRG](https://letsencrypt.org/)** -- Free and auto-renewing SSL certificates
 -  **[Rastapasta](https://github.com/rastapasta/mapscii)** -- Proxy server map display inspo
+-  **[Dan Brown](https://github.com/daniellsu/leaflet-betterscale)** -- Leaflet scale bar inspo
+-  **[Real Favicon Generator](https://realfavicongenerator.net/)** -- Favicon formatting for different devices
